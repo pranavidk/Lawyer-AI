@@ -8,16 +8,16 @@ import IntroScreen from "../components/IntroScreen";
 import DisclaimerModal from "../components/DisclaimerModal";
 
 const Index = () => {
-  const [showIntro, setShowIntro] = useState(false);
+  const [showIntro, setShowIntro] = useState(true); // Start with intro shown
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Check if this is a fresh page load (not navigation)
     const isNavigation = sessionStorage.getItem('juriSenseNavigation');
     
-    if (!isNavigation) {
-      // This is a fresh page load or reload - show intro
-      setShowIntro(true);
+    if (isNavigation) {
+      // This is navigation - hide intro immediately
+      setShowIntro(false);
     }
     
     // Clear the navigation flag

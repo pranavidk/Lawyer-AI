@@ -161,12 +161,12 @@ const IntroScreen = ({ onComplete }: IntroScreenProps) => {
         {/* Loading Animation */}
         {showLoading && (
           <motion.div
-            className="mb-6"
+            className="mb-8 flex flex-col items-center"
             variants={loadingVariants}
             initial="hidden"
             animate="visible"
           >
-            <div className="flex justify-center items-center space-x-2">
+            <div className="flex justify-center items-center space-x-2 mb-4">
               {/* Pulsing Dots */}
               {[0, 1, 2].map((i) => (
                 <motion.div
@@ -185,6 +185,16 @@ const IntroScreen = ({ onComplete }: IntroScreenProps) => {
                 />
               ))}
             </div>
+            
+            {/* Loading Text */}
+            <motion.p
+              className="text-sm text-accent-1/80 font-medium"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 2.8, duration: 0.5 }}
+            >
+              Loading JuriSense AI...
+            </motion.p>
           </motion.div>
         )}
 
@@ -210,7 +220,7 @@ const IntroScreen = ({ onComplete }: IntroScreenProps) => {
         {/* Animated Legal Icon */}
         {showLoading && (
           <motion.div
-            className="mt-8"
+            className="mt-6 flex justify-center"
             initial={{ scale: 0, rotate: -180 }}
             animate={{ scale: 1, rotate: 0 }}
             transition={{ 
@@ -221,9 +231,9 @@ const IntroScreen = ({ onComplete }: IntroScreenProps) => {
               damping: 15
             }}
           >
-            <div className="mx-auto w-20 h-20 rounded-full bg-accent-1/20 backdrop-blur-sm flex items-center justify-center border border-accent-1/30">
+            <div className="w-16 h-16 rounded-full bg-accent-1/20 backdrop-blur-sm flex items-center justify-center border border-accent-1/30">
               <motion.div
-                className="w-10 h-10 border-2 border-accent-1 rounded-lg relative"
+                className="w-8 h-8 border-2 border-accent-1 rounded-lg relative"
                 animate={{ 
                   rotate: 360,
                   scale: [1, 1.1, 1]
@@ -252,22 +262,6 @@ const IntroScreen = ({ onComplete }: IntroScreenProps) => {
         )}
       </div>
 
-      {/* Progress Bar */}
-      {showLoading && (
-        <motion.div
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-64 h-1 bg-accent-1/20 rounded-full overflow-hidden"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 2.2, duration: 0.5 }}
-        >
-          <motion.div
-            className="h-full bg-gradient-to-r from-accent-1 to-accent-2 rounded-full"
-            initial={{ width: "0%" }}
-            animate={{ width: "100%" }}
-            transition={{ duration: 1.5, ease: "easeInOut", delay: 2.5 }}
-          />
-        </motion.div>
-      )}
     </motion.div>
   );
 };

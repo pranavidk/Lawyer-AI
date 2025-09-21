@@ -1,9 +1,10 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { Send, Bot, User } from "lucide-react";
+import { queryOllama } from "../lib/ollama_api";
 
 interface Message {
-  id: number;
+  id: string;
   content: string;
   isUser: boolean;
   timestamp: Date;
@@ -12,7 +13,7 @@ interface Message {
 const ChatSample = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
-      id: 1,
+      id: crypto.randomUUID(),
       content: "Hello! I'm your AI legal assistant. I can help explain legal concepts, analyze documents, and answer your questions in plain English. What would you like to know?",
       isUser: false,
       timestamp: new Date(),
@@ -20,40 +21,58 @@ const ChatSample = () => {
   ]);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const sampleResponses = [
-    "Based on your question, here's what you need to know: Legal contracts typically include key elements like offer, acceptance, consideration, and mutual agreement. Would you like me to explain any of these terms in more detail?",
-    "That's a great question! In simple terms, liability refers to legal responsibility for damages or harm. There are different types of liability, including strict liability, negligent liability, and contractual liability.",
-    "I'd be happy to help clarify that legal concept. The statute of limitations is the time limit for filing a lawsuit or legal claim. Different types of cases have different time limits, typically ranging from 1-6 years.",
-    "Understanding your rights is important. In this situation, you would typically have the right to seek damages, request specific performance, or in some cases, cancel the agreement entirely.",
-  ];
+  const handleSendMessage = async () => {
+    if (!inputValue.trim() || isTyping) return;
 
-  const handleSendMessage = () => {
-    if (!inputValue.trim()) return;
-
-    // Add user message
+    // Add user message to the chat
     const userMessage: Message = {
-      id: messages.length + 1,
+      id: crypto.randomUUID(),
       content: inputValue,
       isUser: true,
       timestamp: new Date(),
     };
-
+    
+    // Use functional update to ensure the latest state is used
     setMessages(prev => [...prev, userMessage]);
+    const currentInput = inputValue;
     setInputValue("");
-    setIsTyping(true);
+    setIsTyping(true); // Show typing indicator
+    setError(null);
 
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      // Create a legal-focused prompt for better responses
+      const legalPrompt = `You are JuriSense AI, a helpful legal assistant. Please provide clear, accurate, and helpful legal information in plain English. Keep responses concise but informative. Remember to always advise users to consult with a qualified attorney for specific legal advice.
+
+User question: ${currentInput}`;
+
+      // Get response from Ollama
+      const aiResponseText = await queryOllama(legalPrompt);
+      
       const aiResponse: Message = {
-        id: messages.length + 2,
-        content: sampleResponses[Math.floor(Math.random() * sampleResponses.length)],
+        id: crypto.randomUUID(),
+        content: aiResponseText || "I apologize, but I couldn't generate a response at this time. Please try again.",
         isUser: false,
         timestamp: new Date(),
       };
+      
       setMessages(prev => [...prev, aiResponse]);
-      setIsTyping(false);
-    }, 1500);
+    } catch (err) {
+      console.error("Failed to fetch from Ollama:", err);
+      setError("Failed to get a response from the AI. Please make sure Ollama is running and try again.");
+      
+      // Add a fallback message
+      const fallbackResponse: Message = {
+        id: crypto.randomUUID(),
+        content: "I'm having trouble connecting to the AI service. Please make sure Ollama is running on your system and try again.",
+        isUser: false,
+        timestamp: new Date(),
+      };
+      setMessages(prev => [...prev, fallbackResponse]);
+    } finally {
+      setIsTyping(false); // Hide typing indicator
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -162,6 +181,15 @@ const ChatSample = () => {
                 </div>
               </motion.div>
             )}
+
+            {/* Error message display */}
+            {error && (
+              <div className="flex justify-start">
+                <div className="max-w-xs lg:max-w-md px-4 py-2 rounded-lg bg-red-100 text-red-600">
+                  <p className="text-sm">{error}</p>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Input */}
@@ -174,10 +202,11 @@ const ChatSample = () => {
                 onKeyPress={handleKeyPress}
                 placeholder="Ask a legal question..."
                 className="flex-1 px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-blue focus:border-transparent text-foreground placeholder:text-muted-foreground bg-background"
+                disabled={isTyping}
               />
               <motion.button
                 onClick={handleSendMessage}
-                disabled={!inputValue.trim()}
+                disabled={!inputValue.trim() || isTyping}
                 className="px-4 py-2 bg-accent-blue text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}

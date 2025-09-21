@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* JuriSense Design System - Professional Legal AI Theme */
+
+@layer base {
+  :root {
+    /* Aurora Borealis Color Palette - Light Mode */
+    --primary-bg: 240 100% 6%;        /* #0A0A1E - Deep Midnight Blue */
+    --secondary-bg: 240 100% 11%;     /* #1B1B3A - Dark Amethyst */
+    --accent-1: 180 100% 65%;         /* #4CFFD9 - Electric Cyan */
+    --accent-2: 330 100% 70%;         /* #FF66A3 - Cosmic Magenta */
+    --text-primary: 240 100% 95%;     /* #E6E6FA - Lavender Mist */
+    --text-secondary: 240 100% 90%;   /* Lighter lavender for secondary text */
+    
+    /* Light Mode Colors */
+    --background: 240 100% 98%;       /* Very light blue - #F5FAFF */
+    --foreground: 0 0% 0%;            /* High contrast black */
+    
+    --card: 0 0% 100%;               /* Pure white cards */
+    --card-foreground: 0 0% 0%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
+    
+    --primary: 210 100% 50%;         /* Bright blue for headings/buttons */
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 240 100% 96%;       /* Very light blue */
+    --secondary-foreground: 0 0% 0%;
+    
+    --muted: 240 100% 95%;
+    --muted-foreground: 0 0% 40%;
+    
+    --accent: 210 100% 50%;          /* Bright blue accent */
+    --accent-foreground: 0 0% 100%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 240 100% 90%;
+    --input: 240 100% 90%;
+    --ring: 210 100% 50%;
+    
+    --radius: 0.75rem;
+    
+    /* Custom Design Tokens */
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary-bg)), hsl(var(--secondary-bg)));
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(240 100% 98%));
+    --shadow-soft: 0 4px 20px -4px hsl(var(--primary-bg) / 0.1);
+    --shadow-card: 0 8px 32px -8px hsl(var(--primary-bg) / 0.12);
+    --shadow-hover: 0 12px 40px -8px hsl(var(--primary-bg) / 0.18);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  .dark {
+    /* Aurora Borealis Dark Mode */
+    --background: 240 100% 6%;        /* #0A0A1E - Deep Midnight Blue */
+    --foreground: 240 100% 95%;       /* #E6E6FA - Lavender Mist */
+
+    --card: 240 100% 11%;            /* #1B1B3A - Dark Amethyst */
+    --card-foreground: 240 100% 95%;
+
+    --popover: 240 100% 11%;
+    --popover-foreground: 240 100% 95%;
+
+    --primary: 180 100% 65%;         /* #4CFFD9 - Electric Cyan */
+    --primary-foreground: 240 100% 6%;
+
+    --secondary: 240 100% 15%;       /* Slightly lighter than card */
+    --secondary-foreground: 240 100% 95%;
+
+    --muted: 240 100% 15%;
+    --muted-foreground: 240 100% 70%;
+
+    --accent: 180 100% 65%;          /* #4CFFD9 - Electric Cyan */
+    --accent-foreground: 240 100% 6%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 240 100% 20%;
+    --input: 240 100% 20%;
+    --ring: 180 100% 65%;
+    --sidebar-background: 240 100% 6%;
+    --sidebar-foreground: 240 100% 95%;
+    --sidebar-primary: 180 100% 65%;
+    --sidebar-primary-foreground: 240 100% 6%;
+    --sidebar-accent: 240 100% 11%;
+    --sidebar-accent-foreground: 240 100% 95%;
+    --sidebar-border: 240 100% 20%;
+    --sidebar-ring: 180 100% 65%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  }
+}

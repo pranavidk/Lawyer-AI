@@ -12,20 +12,24 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user has visited before
-    const visited = localStorage.getItem('juriSenseVisited');
-    if (visited !== 'true') {
+    // Check if this is a fresh page load (not navigation)
+    const isNavigation = sessionStorage.getItem('juriSenseNavigation');
+    
+    if (!isNavigation) {
+      // This is a fresh page load or reload - show intro
       setShowIntro(true);
     }
+    
+    // Clear the navigation flag
+    sessionStorage.removeItem('juriSenseNavigation');
     setIsLoading(false);
   }, []);
 
   const handleIntroComplete = () => {
     setShowIntro(false);
-    localStorage.setItem('juriSenseVisited', 'true');
   };
 
-  // Show loading state while checking localStorage
+  // Show loading state while checking sessionStorage
   if (isLoading) {
     return null;
   }

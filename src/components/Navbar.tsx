@@ -13,6 +13,11 @@ const Navbar = () => {
     { name: "JuriSense AI", path: "/chat" },
   ];
 
+  const handleHomeClick = () => {
+    // Set navigation flag to prevent intro screen
+    sessionStorage.setItem('juriSenseNavigation', 'true');
+  };
+
   return (
     <motion.nav
       className="sticky top-0 z-40 bg-primary-bg shadow-soft"
@@ -30,6 +35,7 @@ const Navbar = () => {
           >
             <Link
               to="/"
+              onClick={handleHomeClick}
               className="text-xl font-bold text-text-primary transition-colors hover:text-accent-1"
             >
               JuriSense
@@ -47,6 +53,7 @@ const Navbar = () => {
                 >
                   <Link
                     to={item.path}
+                    onClick={item.path === "/" ? handleHomeClick : undefined}
                     className={`px-3 py-2 text-sm font-medium transition-colors duration-200 ${
                       location.pathname === item.path
                         ? "text-accent-1 border-b-2 border-accent-1"

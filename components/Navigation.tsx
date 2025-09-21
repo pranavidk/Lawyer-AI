@@ -63,16 +63,15 @@ export function Navigation() {
             ))}
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="lg:hidden">
+          {/* Settings Dropdown */}
+          <div className="relative">
             <button
               onClick={() => setIsSettingsOpen(!isSettingsOpen)}
               className="p-2 text-aurora-text/80 hover:text-aurora-accent1 transition-colors"
-              aria-label="Open menu"
+              aria-label="Open settings"
             >
               <Settings className="h-5 w-5" />
             </button>
-          </div>
 
             {isSettingsOpen && (
               <motion.div

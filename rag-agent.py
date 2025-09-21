@@ -111,7 +111,7 @@ Answer based on the document:"""
 
     try:
         response = ollama.chat(
-            model="llama2-uncensored:7b",
+            model="llama3.2:latest",
             messages=[{"role": "user", "content": prompt}]
         )
         return response["message"]["content"]

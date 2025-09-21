@@ -148,7 +148,7 @@ const IntroScreen = ({ onComplete }: IntroScreenProps) => {
                   animate="visible"
                   style={{
                     textShadow: "0 0 30px hsl(var(--accent-1) / 0.5)",
-                    fontFamily: "Roboto, -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica Neue, Arial, sans-serif"
+                    fontFamily: "Montserrat, -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica Neue, Arial, sans-serif"
                   }}
                 >
                   {letter}
@@ -209,7 +209,7 @@ const IntroScreen = ({ onComplete }: IntroScreenProps) => {
               className="text-xl md:text-2xl text-accent-1 font-medium"
               style={{
                 textShadow: "0 0 20px hsl(var(--accent-1) / 0.3)",
-                fontFamily: "Roboto, -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica Neue, Arial, sans-serif"
+                fontFamily: "Montserrat, -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica Neue, Arial, sans-serif"
               }}
             >
               Your AI Legal Companion — Secure, Smart, Simple

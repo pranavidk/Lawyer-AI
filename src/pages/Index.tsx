@@ -5,10 +5,12 @@ import FeatureTiles from "../components/FeatureTiles";
 import DocumentUploadSample from "../components/DocumentUploadSample";
 import ChatSample from "../components/ChatSample";
 import IntroScreen from "../components/IntroScreen";
+import DisclaimerPopup from "../components/DisclaimerPopup";
 import DisclaimerModal from "../components/DisclaimerModal";
 
 const Index = () => {
   const [showIntro, setShowIntro] = useState(true); // Start with intro shown
+  const [showDisclaimer, setShowDisclaimer] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -27,6 +29,14 @@ const Index = () => {
 
   const handleIntroComplete = () => {
     setShowIntro(false);
+    // Show disclaimer popup after intro completes
+    setTimeout(() => {
+      setShowDisclaimer(true);
+    }, 500);
+  };
+
+  const handleDisclaimerClose = () => {
+    setShowDisclaimer(false);
   };
 
   // Show loading state while checking sessionStorage
@@ -54,6 +64,11 @@ const Index = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Disclaimer Popup */}
+      {showDisclaimer && (
+        <DisclaimerPopup onClose={handleDisclaimerClose} />
+      )}
     </>
   );
 };

@@ -8,10 +8,14 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'JuriSense - AI Legal Assistant',
-  description: 'Your AI legal companion for contract analysis, term explanation, and compliance guidance. Secure, Smart, Simple.',
-  keywords: ['legal', 'AI', 'contract', 'compliance', 'India', 'law', 'JuriSense', 'legal assistant'],
+  description: 'Your AI legal companion for document analysis, term explanation, and compliance guidance. Secure, Smart, Simple.',
+  keywords: ['legal', 'AI', 'document', 'compliance', 'India', 'law', 'JuriSense', 'legal assistant'],
   authors: [{ name: 'JuriSense Team' }],
-  viewport: 'width=device-width, initial-scale=1',
+}
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
 }
 
 export default function RootLayout({

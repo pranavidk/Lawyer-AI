@@ -34,6 +34,7 @@ export function Navigation() {
   }
 
   return (
+<<<<<<< HEAD
     <>
       {/* Paint-fill animation overlay */}
       {isNavigating && (
@@ -60,6 +61,52 @@ export function Navigation() {
               </div>
               <span className="font-semibold dark:text-aurora-text light:text-light-text text-xl">JuriSense</span>
             </motion.div>
+=======
+    <nav className="bg-aurora-primary shadow-lg border-b border-aurora-secondary sticky top-0 z-40">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          {/* Logo */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="flex items-center gap-2"
+          >
+            <div className="w-8 h-8 bg-aurora-accent1 rounded-lg flex items-center justify-center">
+              <span className="text-aurora-primary font-bold text-sm">⚖️</span>
+            </div>
+            <span className="font-semibold text-aurora-text text-xl">JuriSense</span>
+          </motion.div>
+
+          {/* Navigation Links */}
+          <div className="hidden lg:flex items-center space-x-6">
+            {navigation.map((item, index) => (
+              <motion.button
+                key={item.name}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.05 }}
+                onClick={() => scrollToSection(item.href)}
+                className="flex items-center gap-2 text-aurora-text/80 hover:text-aurora-accent1 transition-all duration-300 font-medium px-3 py-2 rounded-lg hover:bg-aurora-secondary/50"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {item.icon && <item.icon className="h-4 w-4" />}
+                <span className="text-sm">{item.name}</span>
+              </motion.button>
+            ))}
+          </div>
+
+          {/* Mobile Menu Button */}
+          <div className="lg:hidden">
+            <button
+              onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+              className="p-2 text-aurora-text/80 hover:text-aurora-accent1 transition-colors"
+              aria-label="Open menu"
+            >
+              <Settings className="h-5 w-5" />
+            </button>
+          </div>
+>>>>>>> parent of 0aa0bd5 (cursorv3)
 
             {/* Navigation Links */}
             <div className="flex items-center space-x-6">

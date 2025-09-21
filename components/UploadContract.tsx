@@ -126,18 +126,18 @@ export function UploadContract({ onAnalysisComplete }: UploadContractProps) {
         <motion.div
           initial={{ scale: 0.95 }}
           animate={{ scale: 1 }}
-          className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8"
+          className="bg-aurora-secondary rounded-2xl shadow-lg border border-aurora-accent1/20 p-8"
         >
           <div
             {...getRootProps()}
             className={`border-2 border-dashed rounded-xl p-12 text-center cursor-pointer transition-all duration-200 ${
               isDragActive
-                ? 'border-primary-400 bg-primary-50'
+                ? 'border-aurora-accent1 bg-aurora-accent1/10'
                 : uploadStatus === 'error'
-                ? 'border-red-300 bg-red-50'
+                ? 'border-red-400 bg-red-400/10'
                 : uploadStatus === 'success'
-                ? 'border-green-300 bg-green-50'
-                : 'border-gray-300 hover:border-primary-400 hover:bg-gray-50'
+                ? 'border-green-400 bg-green-400/10'
+                : 'border-aurora-accent1/50 hover:border-aurora-accent1 hover:bg-aurora-accent1/5'
             }`}
           >
             <input {...getInputProps()} />
@@ -146,12 +146,12 @@ export function UploadContract({ onAnalysisComplete }: UploadContractProps) {
               {getStatusIcon()}
               
               <div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                <h3 className="text-lg font-medium text-aurora-text mb-2">
                   {getStatusText()}
                 </h3>
                 
                 {uploadStatus === 'idle' && (
-                  <p className="text-gray-500">
+                  <p className="text-aurora-text/70">
                     {toneMode === 'casual' 
                       ? 'Supports PDF, DOCX, and TXT files (up to 10MB)'
                       : 'Supported formats: PDF, DOCX, TXT (Maximum 10MB)'
@@ -160,33 +160,33 @@ export function UploadContract({ onAnalysisComplete }: UploadContractProps) {
                 )}
 
                 {uploadedFile && (
-                  <div className="mt-4 p-3 bg-gray-100 rounded-lg">
+                  <div className="mt-4 p-3 bg-aurora-primary/50 rounded-lg border border-aurora-accent1/20">
                     <div className="flex items-center gap-2">
-                      <FileText className="h-4 w-4 text-gray-600" />
-                      <span className="text-sm text-gray-700">{uploadedFile.name}</span>
+                      <FileText className="h-4 w-4 text-aurora-accent1" />
+                      <span className="text-sm text-aurora-text">{uploadedFile.name}</span>
                     </div>
                   </div>
                 )}
 
                 {(uploadStatus === 'uploading' || uploadStatus === 'analyzing') && (
                   <div className="mt-4 w-full max-w-xs mx-auto">
-                    <div className="bg-gray-200 rounded-full h-2">
+                    <div className="bg-aurora-primary/50 rounded-full h-2">
                       <motion.div
-                        className="bg-primary-600 h-2 rounded-full"
+                        className="bg-gradient-to-r from-aurora-accent1 to-aurora-accent2 h-2 rounded-full"
                         initial={{ width: 0 }}
                         animate={{ width: `${uploadProgress}%` }}
                         transition={{ duration: 0.3 }}
                       />
                     </div>
-                    <p className="text-sm text-gray-600 mt-2">
+                    <p className="text-sm text-aurora-text/80 mt-2">
                       {uploadProgress}% complete
                     </p>
                   </div>
                 )}
 
                 {error && (
-                  <div className="mt-4 p-3 bg-red-100 border border-red-200 rounded-lg">
-                    <p className="text-sm text-red-700">{error}</p>
+                  <div className="mt-4 p-3 bg-red-400/10 border border-red-400/30 rounded-lg">
+                    <p className="text-sm text-red-300">{error}</p>
                   </div>
                 )}
               </div>

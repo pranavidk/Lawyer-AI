@@ -8,6 +8,15 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        // Aurora Borealis Color Palette
+        aurora: {
+          primary: '#0A0A1E',      // Deep Midnight Blue
+          secondary: '#1B1B3A',    // Dark Amethyst
+          accent1: '#4CFFD9',      // Electric Cyan
+          accent2: '#FF66A3',      // Cosmic Magenta
+          text: '#E6E6FA',         // Lavender Mist
+        },
+        // Keep existing colors for compatibility
         primary: {
           50: '#f0f9ff',
           100: '#e0f2fe',

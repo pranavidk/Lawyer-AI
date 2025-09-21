@@ -11,24 +11,26 @@ html {
 body {
   font-family: 'Inter', system-ui, sans-serif;
   line-height: 1.6;
+  background-color: #0A0A1E;
+  color: #E6E6FA;
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar with Aurora theme */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #1B1B3A;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #4CFFD9;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #FF66A3;
 }
 
 /* Smooth transitions for all interactive elements */

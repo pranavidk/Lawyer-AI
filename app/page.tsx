@@ -2,6 +2,8 @@
 
 import { motion } from 'framer-motion'
 import { Navigation } from '@/components/Navigation'
+import { SplashScreen } from '@/components/SplashScreen'
+import { HomepageGrid } from '@/components/HomepageGrid'
 import { UploadContract } from '@/components/UploadContract'
 import { ClauseList } from '@/components/ClauseList'
 import { TermExplainer } from '@/components/TermExplainer'
@@ -11,20 +13,29 @@ import { useState } from 'react'
 
 export default function Home() {
   const [contractAnalysis, setContractAnalysis] = useState<any>(null)
+  const [showSplash, setShowSplash] = useState(true)
 
   const handleAnalysisComplete = (analysis: any) => {
     setContractAnalysis(analysis)
   }
 
+  const handleSplashComplete = () => {
+    setShowSplash(false)
+  }
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-aurora-primary">
+      {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
       <Navigation />
       
       {/* Hero Section */}
       <motion.section
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="py-20 bg-gradient-to-br from-primary-50 to-blue-50"
+        className="py-20"
+        style={{
+          background: 'linear-gradient(135deg, #0A0A1E 0%, #1B1B3A 50%, #0A0A1E 100%)'
+        }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
@@ -32,20 +43,22 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-              Lawyer AI
-              <span className="block text-primary-600">Legal Assistant</span>
+            <h1 className="text-5xl md:text-6xl font-bold text-aurora-text mb-6">
+              JuriSense
+              <span className="block bg-gradient-to-r from-aurora-accent1 to-aurora-accent2 bg-clip-text text-transparent">
+                AI Legal Assistant
+              </span>
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8 leading-relaxed">
-              AI-powered legal assistance for contract analysis, term explanation, and compliance guidance. 
-              Get plain-English explanations and actionable insights for your legal needs.
+            <p className="text-xl text-aurora-text/80 max-w-3xl mx-auto mb-8 leading-relaxed">
+              Your comprehensive AI-powered legal companion. Analyze contracts, explain terms, check compliance, 
+              and get actionable insights with the power of artificial intelligence.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => document.querySelector('#contract')?.scrollIntoView({ behavior: 'smooth' })}
-                className="px-8 py-4 bg-primary-600 text-white rounded-xl font-semibold hover:bg-primary-700 transition-colors shadow-lg"
+                className="px-8 py-4 bg-gradient-to-r from-aurora-accent1 to-aurora-accent2 text-aurora-primary rounded-xl font-semibold hover:shadow-lg hover:shadow-aurora-accent1/25 transition-all duration-300"
               >
                 Analyze Contract
               </motion.button>
@@ -53,7 +66,7 @@ export default function Home() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => document.querySelector('#terms')?.scrollIntoView({ behavior: 'smooth' })}
-                className="px-8 py-4 bg-white text-primary-600 rounded-xl font-semibold hover:bg-gray-50 transition-colors shadow-lg border border-primary-200"
+                className="px-8 py-4 bg-aurora-secondary text-aurora-text rounded-xl font-semibold hover:bg-aurora-accent1/10 transition-all duration-300 border border-aurora-accent1/30"
               >
                 Explain Terms
               </motion.button>
@@ -62,84 +75,15 @@ export default function Home() {
         </div>
       </motion.section>
 
-      {/* Features Grid */}
-      <motion.section
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.4 }}
-        className="py-16 bg-white"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Powerful Legal Tools
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Three comprehensive features to help you navigate legal complexities with confidence
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="text-center p-6 rounded-2xl bg-gray-50 hover:bg-gray-100 transition-colors"
-            >
-              <div className="w-16 h-16 bg-primary-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">📄</span>
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                Contract Analysis
-              </h3>
-              <p className="text-gray-600">
-                Upload contracts and get highlighted clauses with severity ratings and plain-English explanations
-              </p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-              className="text-center p-6 rounded-2xl bg-gray-50 hover:bg-gray-100 transition-colors"
-            >
-              <div className="w-16 h-16 bg-primary-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">📚</span>
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                Term Explanation
-              </h3>
-              <p className="text-gray-600">
-                Get instant explanations of legal terms with examples and statutory references
-              </p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-              className="text-center p-6 rounded-2xl bg-gray-50 hover:bg-gray-100 transition-colors"
-            >
-              <div className="w-16 h-16 bg-primary-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">🛡️</span>
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                Compliance Check
-              </h3>
-              <p className="text-gray-600">
-                Quick compliance scenarios for GST, IT Act, Employment, and Rental agreements
-              </p>
-            </motion.div>
-          </div>
-        </div>
-      </motion.section>
+      {/* Homepage Grid */}
+      <HomepageGrid />
 
       {/* Main Content Sections */}
-      <div className="space-y-0">
+      <div className="space-y-0 bg-aurora-primary">
         <UploadContract onAnalysisComplete={handleAnalysisComplete} />
         
         {contractAnalysis && (
-          <section className="py-12 bg-gray-50">
+          <section className="py-12 bg-aurora-secondary">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
               <ClauseList clauses={contractAnalysis.clauses || []} />
             </div>
@@ -155,22 +99,22 @@ export default function Home() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8 }}
-        className="bg-gray-900 text-white py-12"
+        className="bg-aurora-secondary border-t border-aurora-accent1/20 py-12"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">⚖️</span>
+              <div className="w-8 h-8 bg-aurora-accent1 rounded-lg flex items-center justify-center">
+                <span className="text-aurora-primary font-bold text-sm">⚖️</span>
               </div>
-              <span className="font-semibold text-xl">Lawyer AI</span>
+              <span className="font-semibold text-xl text-aurora-text">JuriSense</span>
             </div>
-            <p className="text-gray-400 mb-6">
+            <p className="text-aurora-text/80 mb-6">
               AI-powered legal assistance for modern businesses and individuals
             </p>
-            <div className="border-t border-gray-800 pt-6">
-              <p className="text-sm text-gray-500">
-                © 2024 Lawyer AI. This tool provides general information only and does not constitute legal advice.
+            <div className="border-t border-aurora-accent1/20 pt-6">
+              <p className="text-sm text-aurora-text/60">
+                © 2024 JuriSense. This tool provides general information only and does not constitute legal advice.
               </p>
             </div>
           </div>

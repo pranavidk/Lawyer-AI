@@ -161,12 +161,12 @@ const IntroScreen = ({ onComplete }: IntroScreenProps) => {
         {/* Loading Animation */}
         {showLoading && (
           <motion.div
-            className="mb-8 flex flex-col items-center"
+            className="mb-8 flex justify-center"
             variants={loadingVariants}
             initial="hidden"
             animate="visible"
           >
-            <div className="flex justify-center items-center space-x-2 mb-4">
+            <div className="flex justify-center items-center space-x-2">
               {/* Pulsing Dots */}
               {[0, 1, 2].map((i) => (
                 <motion.div
@@ -185,16 +185,6 @@ const IntroScreen = ({ onComplete }: IntroScreenProps) => {
                 />
               ))}
             </div>
-            
-            {/* Loading Text */}
-            <motion.p
-              className="text-sm text-accent-1/80 font-medium"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 2.8, duration: 0.5 }}
-            >
-              Loading JuriSense AI...
-            </motion.p>
           </motion.div>
         )}
 
@@ -217,49 +207,6 @@ const IntroScreen = ({ onComplete }: IntroScreenProps) => {
           </motion.div>
         )}
 
-        {/* Animated Legal Icon */}
-        {showLoading && (
-          <motion.div
-            className="mt-6 flex justify-center"
-            initial={{ scale: 0, rotate: -180 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ 
-              delay: 2.5, 
-              duration: 1, 
-              type: "spring", 
-              stiffness: 150,
-              damping: 15
-            }}
-          >
-            <div className="w-16 h-16 rounded-full bg-accent-1/20 backdrop-blur-sm flex items-center justify-center border border-accent-1/30">
-              <motion.div
-                className="w-8 h-8 border-2 border-accent-1 rounded-lg relative"
-                animate={{ 
-                  rotate: 360,
-                  scale: [1, 1.1, 1]
-                }}
-                transition={{ 
-                  rotate: { duration: 2, repeat: Infinity, ease: "linear" },
-                  scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
-                }}
-              >
-                <motion.div
-                  className="absolute inset-1 border border-accent-1/50 rounded"
-                  animate={{ 
-                    scale: [1, 0.8, 1],
-                    opacity: [0.5, 1, 0.5]
-                  }}
-                  transition={{ 
-                    duration: 1.5, 
-                    repeat: Infinity, 
-                    ease: "easeInOut",
-                    delay: 0.5
-                  }}
-                />
-              </motion.div>
-            </div>
-          </motion.div>
-        )}
       </div>
 
     </motion.div>

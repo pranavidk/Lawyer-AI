@@ -16,6 +16,8 @@ const Navbar = () => {
   const handleHomeClick = () => {
     // Set navigation flag to prevent intro screen
     sessionStorage.setItem('juriSenseNavigation', 'true');
+    // Scroll to top of page
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (

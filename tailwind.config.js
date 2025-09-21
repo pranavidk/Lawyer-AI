@@ -8,6 +8,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+<<<<<<< HEAD
         // Aurora Borealis Color Palette
         aurora: {
           primary: '#0A0A1E',      // Deep Midnight Blue
@@ -25,6 +26,8 @@ module.exports = {
           text: '#000000',         // Black
         },
         // Keep existing colors for compatibility
+=======
+>>>>>>> parent of 4d8d5b0 (cursorv2)
         primary: {
           50: '#f0f9ff',
           100: '#e0f2fe',

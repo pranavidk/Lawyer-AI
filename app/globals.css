@@ -11,6 +11,7 @@ html {
 body {
   font-family: 'Inter', system-ui, sans-serif;
   line-height: 1.6;
+<<<<<<< HEAD
   transition: background-color 0.3s ease, color 0.3s ease;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -35,21 +36,26 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Custom scrollbar with Aurora theme */
+=======
+}
+
+/* Custom scrollbar */
+>>>>>>> parent of 4d8d5b0 (cursorv2)
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #1B1B3A;
+  background: #f1f5f9;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #4CFFD9;
+  background: #cbd5e1;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #FF66A3;
+  background: #94a3b8;
 }
 
 /* Smooth transitions for all interactive elements */

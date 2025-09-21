@@ -46,7 +46,7 @@ export function Navigation() {
         />
       )}
       
-      <nav className="dark:bg-aurora-primary light:bg-light-secondary shadow-lg border-b dark:border-aurora-secondary light:border-gray-200 sticky top-0 z-40 transition-colors duration-300">
+      <nav className="dark:bg-aurora-primary light:bg-white shadow-lg border-b dark:border-aurora-secondary light:border-gray-200 sticky top-0 z-40 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}

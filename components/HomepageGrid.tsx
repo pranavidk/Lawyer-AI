@@ -23,10 +23,10 @@ const gridItems = [
     color: 'from-aurora-accent1 to-aurora-accent2'
   },
   {
-    title: 'Contract Analysis',
-    description: 'Deep dive into contract clauses with severity analysis',
+    title: 'Document Analysis',
+    description: 'Deep dive into document clauses with severity analysis',
     icon: Scale,
-    href: '#contract',
+    href: '#document',
     color: 'from-aurora-accent2 to-aurora-accent1'
   },
   {

@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { Navigation } from '@/components/Navigation'
+import { PageTransition } from '@/components/PageTransition'
 import { FileText, Upload, AlertCircle, CheckCircle, Loader2 } from 'lucide-react'
 import { useCallback, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
@@ -91,7 +92,7 @@ export default function DocumentAnalyzer() {
   }
 
   return (
-    <div className="min-h-screen dark:bg-aurora-primary light:bg-light-primary transition-colors duration-300">
+    <PageTransition className="min-h-screen dark:bg-aurora-primary light:bg-light-primary transition-colors duration-300">
       <Navigation />
       
       <motion.div
@@ -108,7 +109,7 @@ export default function DocumentAnalyzer() {
               Document Analyzer
             </h1>
             <p className="text-xl dark:text-aurora-text/80 light:text-light-text/80 max-w-2xl mx-auto">
-              Upload any legal document and get AI-powered insights, clause analysis, and plain-English explanations
+              Upload a contract or legal document and JuriSense will analyze it in plain English
             </p>
           </div>
 
@@ -185,21 +186,30 @@ export default function DocumentAnalyzer() {
                 animate={{ opacity: 1, y: 0 }}
                 className="mt-8 p-6 bg-green-400/10 border border-green-400/30 rounded-lg"
               >
-                <h4 className="font-semibold text-green-300 mb-3">Analysis Results</h4>
-                <p className="text-sm text-green-200">
+                <h4 className="font-semibold text-green-300 mb-3">Analysis Complete! 🎉</h4>
+                <p className="text-sm text-green-200 mb-4">
                   Your document has been successfully analyzed! The AI has identified key clauses, 
                   potential issues, and provided plain-English explanations. Results will be displayed 
                   once the backend integration is complete.
                 </p>
-                <div className="mt-4 flex items-center gap-2 text-green-300">
+                <div className="flex items-center gap-2 text-green-300">
                   <AlertCircle className="h-4 w-4" />
                   <span className="text-xs">Backend integration in progress</span>
+                </div>
+                <div className="mt-4">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-6 py-3 bg-gradient-to-r from-aurora-accent1 to-aurora-accent2 text-aurora-primary rounded-xl font-semibold hover:shadow-lg transition-all duration-300"
+                  >
+                    Analyze Document
+                  </motion.button>
                 </div>
               </motion.div>
             )}
           </motion.div>
         </div>
       </motion.div>
-    </div>
+    </PageTransition>
   )
 }

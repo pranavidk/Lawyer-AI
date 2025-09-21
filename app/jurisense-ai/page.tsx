@@ -2,6 +2,8 @@
 
 import { motion, AnimatePresence } from 'framer-motion'
 import { Navigation } from '@/components/Navigation'
+import { PageTransition } from '@/components/PageTransition'
+import { TypingEffect } from '@/components/TypingEffect'
 import { Send, Bot, User, Loader2 } from 'lucide-react'
 import { useState, useRef, useEffect } from 'react'
 
@@ -94,7 +96,7 @@ export default function JuriSenseAI() {
   }
 
   return (
-    <div className="min-h-screen dark:bg-aurora-primary light:bg-light-primary transition-colors duration-300">
+    <PageTransition className="min-h-screen dark:bg-aurora-primary light:bg-light-primary transition-colors duration-300">
       <Navigation />
       
       <motion.div
@@ -116,9 +118,13 @@ export default function JuriSenseAI() {
             <h1 className="text-4xl font-bold dark:text-aurora-text light:text-light-text mb-4">
               JuriSense AI
             </h1>
-            <p className="text-lg dark:text-aurora-text/80 light:text-light-text/80 max-w-2xl mx-auto">
-              Your casual legal companion. Ask me anything about legal terms, scenarios, or laws - I'll explain it in plain English! 😊
-            </p>
+            <div className="text-lg dark:text-aurora-text/80 light:text-light-text/80 max-w-2xl mx-auto">
+              <TypingEffect 
+                text="Your casual legal companion. Ask me anything about legal terms, scenarios, or laws - I'll explain it in plain English! 😊"
+                speed={50}
+                className="font-medium"
+              />
+            </div>
           </div>
 
           {/* Chat Container */}
@@ -221,6 +227,6 @@ export default function JuriSenseAI() {
           </motion.div>
         </div>
       </motion.div>
-    </div>
+    </PageTransition>
   )
 }

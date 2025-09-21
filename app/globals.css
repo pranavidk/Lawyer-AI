@@ -12,6 +12,14 @@ body {
   font-family: 'Inter', system-ui, sans-serif;
   line-height: 1.6;
   transition: background-color 0.3s ease, color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Ensure proper line-height for headings */
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.2;
+  letter-spacing: -0.025em;
 }
 
 /* Dark mode styles */
@@ -22,7 +30,7 @@ body {
 
 /* Light mode styles */
 .light body {
-  background-color: #F9FBFF;
+  background-color: #F5FAFF;
   color: #000000;
 }
 

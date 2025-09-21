@@ -88,8 +88,8 @@ export function ClauseList({ clauses }: ClauseListProps) {
           </p>
           <p className="text-sm mt-2">
             {toneMode === 'casual' 
-              ? 'Upload a contract to get started! 🚀'
-              : 'Upload a contract document to begin analysis'
+              ? 'Upload a document to get started! 🚀'
+              : 'Upload a document to begin analysis'
             }
           </p>
         </div>
@@ -105,7 +105,7 @@ export function ClauseList({ clauses }: ClauseListProps) {
     >
       <div className="text-center mb-8">
         <h3 className="text-2xl font-bold text-gray-900 mb-2">
-          {toneMode === 'casual' ? '📋 Analyzed Clauses' : 'Contract Analysis Results'}
+          {toneMode === 'casual' ? '📋 Analyzed Clauses' : 'Document Analysis Results'}
         </h3>
         <p className="text-gray-600">
           {toneMode === 'casual' 

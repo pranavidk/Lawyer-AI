@@ -7,11 +7,11 @@ import { Upload, FileText, AlertCircle, CheckCircle, Loader2 } from 'lucide-reac
 import { useTheme } from './ThemeProvider'
 import { apiService } from '@/lib/api'
 
-interface UploadContractProps {
+interface UploadDocumentProps {
   onAnalysisComplete: (analysis: any) => void
 }
 
-export function UploadContract({ onAnalysisComplete }: UploadContractProps) {
+export function UploadContract({ onAnalysisComplete }: UploadDocumentProps) {
   const { toneMode, privacyMode } = useTheme()
   const [uploadStatus, setUploadStatus] = useState<'idle' | 'uploading' | 'analyzing' | 'success' | 'error'>('idle')
   const [uploadProgress, setUploadProgress] = useState(0)
@@ -49,7 +49,7 @@ export function UploadContract({ onAnalysisComplete }: UploadContractProps) {
       setUploadProgress(100)
       setUploadStatus('analyzing')
 
-      // Analyze contract
+      // Analyze document
       const analysis = await apiService.analyzeContract(uploadResult.fileId, {
         privacy: privacyMode,
         tone: toneMode
@@ -93,13 +93,13 @@ export function UploadContract({ onAnalysisComplete }: UploadContractProps) {
       case 'uploading':
         return toneMode === 'casual' ? 'Uploading your file... 📤' : 'Uploading document'
       case 'analyzing':
-        return toneMode === 'casual' ? 'Analyzing contract clauses... 🔍' : 'Analyzing contract'
+        return toneMode === 'casual' ? 'Analyzing document clauses... 🔍' : 'Analyzing document'
       case 'success':
         return toneMode === 'casual' ? 'Analysis complete! 🎉' : 'Analysis completed successfully'
       case 'error':
         return 'Upload failed'
       default:
-        return toneMode === 'casual' ? 'Drop your contract here! 📄' : 'Upload contract document'
+        return toneMode === 'casual' ? 'Drop your document here! 📄' : 'Upload document'
     }
   }
 
@@ -108,17 +108,17 @@ export function UploadContract({ onAnalysisComplete }: UploadContractProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       className="py-12"
-      id="contract"
+      id="document"
     >
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            {toneMode === 'casual' ? '📄 Contract Analysis' : 'Contract Clause Analysis'}
+            {toneMode === 'casual' ? '📄 Document Analysis' : 'Document Analysis'}
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             {toneMode === 'casual' 
-              ? 'Upload your contract and we\'ll highlight important clauses with plain-English explanations! 😊'
-              : 'Upload your contract document to analyze clauses, identify potential issues, and receive plain-English explanations.'
+              ? 'Upload your document and we\'ll highlight important clauses with plain-English explanations! 😊'
+              : 'Upload your document to analyze clauses, identify potential issues, and receive plain-English explanations.'
             }
           </p>
         </div>

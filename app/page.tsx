@@ -9,14 +9,15 @@ import { UploadContract } from '@/components/UploadContract'
 import { ClauseList } from '@/components/ClauseList'
 import { TermExplainer } from '@/components/TermExplainer'
 import { ChatWidget } from '@/components/ChatWidget'
+import { PageTransition } from '@/components/PageTransition'
 import { useState } from 'react'
 
 export default function Home() {
-  const [contractAnalysis, setContractAnalysis] = useState<any>(null)
+  const [documentAnalysis, setDocumentAnalysis] = useState<any>(null)
   const [showSplash, setShowSplash] = useState(true)
 
   const handleAnalysisComplete = (analysis: any) => {
-    setContractAnalysis(analysis)
+    setDocumentAnalysis(analysis)
   }
 
   const handleSplashComplete = () => {
@@ -24,7 +25,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen dark:bg-aurora-primary light:bg-light-primary transition-colors duration-300">
+    <PageTransition className="min-h-screen dark:bg-aurora-primary light:bg-light-primary transition-colors duration-300">
       {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
       <Navigation />
       
@@ -43,15 +44,15 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <h1 className="text-5xl md:text-6xl font-bold dark:text-aurora-text light:text-light-text mb-6 leading-tight">
+            <h1 className="text-5xl md:text-6xl font-bold dark:text-aurora-text light:text-light-text mb-6 leading-[1.1]">
               JuriSense
-              <span className="block bg-gradient-to-r from-aurora-accent1 to-aurora-accent2 bg-clip-text text-transparent leading-tight">
+              <span className="block bg-gradient-to-r from-aurora-accent1 to-aurora-accent2 bg-clip-text text-transparent leading-[1.1]">
                 AI Legal Assistant
               </span>
             </h1>
             <div className="text-xl dark:text-aurora-text/80 light:text-light-text/80 max-w-3xl mx-auto mb-8 leading-relaxed">
               <TypingEffect 
-                text="Your AI Legal Companion — Secure, Smart, Simple."
+                text="Your AI Legal Companion — Simple, Smart, Secure"
                 speed={80}
                 className="font-medium"
               />
@@ -60,7 +61,7 @@ export default function Home() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => document.querySelector('#contract')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => document.querySelector('#document')?.scrollIntoView({ behavior: 'smooth' })}
                 className="px-8 py-4 bg-gradient-to-r from-aurora-accent1 to-aurora-accent2 text-aurora-primary rounded-xl font-semibold hover:shadow-lg hover:shadow-aurora-accent1/25 transition-all duration-300"
               >
                 Analyze Document
@@ -83,10 +84,10 @@ export default function Home() {
       <div className="space-y-0 bg-aurora-primary">
         <UploadContract onAnalysisComplete={handleAnalysisComplete} />
         
-        {contractAnalysis && (
+        {documentAnalysis && (
           <section className="py-12 bg-aurora-secondary">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-              <ClauseList clauses={contractAnalysis.clauses || []} />
+              <ClauseList clauses={documentAnalysis.clauses || []} />
             </div>
           </section>
         )}
@@ -123,6 +124,6 @@ export default function Home() {
 
       <ChatWidget />
       <DisclaimerPopup />
-    </div>
+    </PageTransition>
   )
 }

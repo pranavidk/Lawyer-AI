@@ -18,7 +18,7 @@ module.exports = {
         },
         // Light Mode Colors
         light: {
-          primary: '#F9FBFF',      // Light bluish white
+          primary: '#F5FAFF',      // Very light blue (almost white)
           secondary: '#FFFFFF',    // White
           accent1: '#007BFF',      // Bright Blue
           accent2: '#0056B3',      // Darker Blue

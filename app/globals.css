@@ -11,8 +11,19 @@ html {
 body {
   font-family: 'Inter', system-ui, sans-serif;
   line-height: 1.6;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark mode styles */
+.dark body {
   background-color: #0A0A1E;
   color: #E6E6FA;
+}
+
+/* Light mode styles */
+.light body {
+  background-color: #F9FBFF;
+  color: #000000;
 }
 
 /* Custom scrollbar with Aurora theme */

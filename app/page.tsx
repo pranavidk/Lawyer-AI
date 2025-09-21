@@ -3,11 +3,11 @@
 import { motion } from 'framer-motion'
 import { Navigation } from '@/components/Navigation'
 import { SplashScreen } from '@/components/SplashScreen'
-import { HomepageGrid } from '@/components/HomepageGrid'
+import { TypingEffect } from '@/components/TypingEffect'
+import { DisclaimerPopup } from '@/components/DisclaimerPopup'
 import { UploadContract } from '@/components/UploadContract'
 import { ClauseList } from '@/components/ClauseList'
 import { TermExplainer } from '@/components/TermExplainer'
-import { ComplianceForm } from '@/components/ComplianceForm'
 import { ChatWidget } from '@/components/ChatWidget'
 import { useState } from 'react'
 
@@ -24,7 +24,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-aurora-primary">
+    <div className="min-h-screen dark:bg-aurora-primary light:bg-light-primary transition-colors duration-300">
       {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
       <Navigation />
       
@@ -43,16 +43,19 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <h1 className="text-5xl md:text-6xl font-bold text-aurora-text mb-6">
+            <h1 className="text-5xl md:text-6xl font-bold dark:text-aurora-text light:text-light-text mb-6 leading-tight">
               JuriSense
-              <span className="block bg-gradient-to-r from-aurora-accent1 to-aurora-accent2 bg-clip-text text-transparent">
+              <span className="block bg-gradient-to-r from-aurora-accent1 to-aurora-accent2 bg-clip-text text-transparent leading-tight">
                 AI Legal Assistant
               </span>
             </h1>
-            <p className="text-xl text-aurora-text/80 max-w-3xl mx-auto mb-8 leading-relaxed">
-              Your comprehensive AI-powered legal companion. Analyze contracts, explain terms, check compliance, 
-              and get actionable insights with the power of artificial intelligence.
-            </p>
+            <div className="text-xl dark:text-aurora-text/80 light:text-light-text/80 max-w-3xl mx-auto mb-8 leading-relaxed">
+              <TypingEffect 
+                text="Your AI Legal Companion — Secure, Smart, Simple."
+                speed={80}
+                className="font-medium"
+              />
+            </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -60,7 +63,7 @@ export default function Home() {
                 onClick={() => document.querySelector('#contract')?.scrollIntoView({ behavior: 'smooth' })}
                 className="px-8 py-4 bg-gradient-to-r from-aurora-accent1 to-aurora-accent2 text-aurora-primary rounded-xl font-semibold hover:shadow-lg hover:shadow-aurora-accent1/25 transition-all duration-300"
               >
-                Analyze Contract
+                Analyze Document
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -75,8 +78,6 @@ export default function Home() {
         </div>
       </motion.section>
 
-      {/* Homepage Grid */}
-      <HomepageGrid />
 
       {/* Main Content Sections */}
       <div className="space-y-0 bg-aurora-primary">
@@ -91,7 +92,6 @@ export default function Home() {
         )}
 
         <TermExplainer />
-        <ComplianceForm />
       </div>
 
       {/* Footer */}
@@ -122,6 +122,7 @@ export default function Home() {
       </motion.footer>
 
       <ChatWidget />
+      <DisclaimerPopup />
     </div>
   )
 }

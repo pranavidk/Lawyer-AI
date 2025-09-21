@@ -16,6 +16,14 @@ module.exports = {
           accent2: '#FF66A3',      // Cosmic Magenta
           text: '#E6E6FA',         // Lavender Mist
         },
+        // Light Mode Colors
+        light: {
+          primary: '#F9FBFF',      // Light bluish white
+          secondary: '#FFFFFF',    // White
+          accent1: '#007BFF',      // Bright Blue
+          accent2: '#0056B3',      // Darker Blue
+          text: '#000000',         // Black
+        },
         // Keep existing colors for compatibility
         primary: {
           50: '#f0f9ff',

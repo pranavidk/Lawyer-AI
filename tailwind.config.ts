@@ -13,6 +13,9 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        inter: ['Inter', 'sans-serif'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -26,6 +29,10 @@ export default {
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
+        },
+        highlight: {
+          DEFAULT: "hsl(var(--highlight))",
+          foreground: "hsl(var(--highlight-foreground))",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
@@ -47,14 +54,6 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        legal: {
-          primary: "hsl(var(--legal-primary))",
-          "primary-dark": "hsl(var(--legal-primary-dark))",
-          secondary: "hsl(var(--legal-secondary))",
-          accent: "hsl(var(--legal-accent))",
-          neutral: "hsl(var(--legal-neutral))",
-          light: "hsl(var(--legal-light))",
-        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -70,16 +69,6 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
-      },
-      backgroundImage: {
-        "gradient-primary": "var(--gradient-primary)",
-        "gradient-secondary": "var(--gradient-secondary)",
-        "gradient-hero": "var(--gradient-hero)",
-      },
-      boxShadow: {
-        "primary": "var(--shadow-primary)",
-        "card": "var(--shadow-card)",
-        "button": "var(--shadow-button)",
       },
       keyframes: {
         "accordion-down": {

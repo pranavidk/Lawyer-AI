@@ -10,8 +10,6 @@ import Index from "./pages/Index";
 import DocumentAnalyzer from "./pages/DocumentAnalyzer";
 import ChatAssistant from "./pages/ChatAssistant";
 import Profile from "./pages/Profile";
-import Settings from "./pages/Settings";
-import Help from "./pages/Help";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import Contact from "./pages/Contact";
@@ -33,8 +31,6 @@ const App = () => (
                 <Route path="/document-analyzer" element={<DocumentAnalyzer />} />
                 <Route path="/chat" element={<ChatAssistant />} />
                 <Route path="/profile" element={<Profile />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/help" element={<Help />} />
                 <Route path="/terms" element={<Terms />} />
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/contact" element={<Contact />} />

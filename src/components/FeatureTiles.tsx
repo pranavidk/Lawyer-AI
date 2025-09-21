@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { FileText, BookOpen, MessageSquare, User, Settings, HelpCircle } from "lucide-react";
+import { FileText, MessageSquare, User } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const FeatureTiles = () => {
@@ -13,7 +13,7 @@ const FeatureTiles = () => {
       bgColor: "bg-blue-50",
     },
     {
-      title: "Chat Assistant",
+      title: "JuriSense AI",
       description: "Get instant legal guidance through conversational AI",
       icon: MessageSquare,
       path: "/chat",
@@ -27,22 +27,6 @@ const FeatureTiles = () => {
       path: "/profile",
       color: "text-purple-600",
       bgColor: "bg-purple-50",
-    },
-    {
-      title: "Settings",
-      description: "Customize your JuriSense experience and preferences",
-      icon: Settings,
-      path: "/settings",
-      color: "text-orange-600",
-      bgColor: "bg-orange-50",
-    },
-    {
-      title: "Help & Support",
-      description: "Get assistance and learn how to use JuriSense effectively",
-      icon: HelpCircle,
-      path: "/help",
-      color: "text-red-600",
-      bgColor: "bg-red-50",
     },
   ];
 

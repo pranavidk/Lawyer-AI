@@ -80,7 +80,7 @@ const ChatSample = () => {
           viewport={{ once: true }}
         >
           <h2 className="text-3xl font-bold text-dark-text sm:text-4xl mb-4">
-            AI Chat Assistant Preview
+            JuriSense AI Preview
           </h2>
           <p className="text-lg text-muted-foreground">
             Experience conversational legal guidance
@@ -116,7 +116,7 @@ const ChatSample = () => {
                   className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
                     message.isUser
                       ? 'bg-accent-blue text-white'
-                      : 'bg-gray-100 text-dark-text'
+                      : 'bg-gray-100 text-black'
                   }`}
                 >
                   <div className="flex items-start space-x-2">

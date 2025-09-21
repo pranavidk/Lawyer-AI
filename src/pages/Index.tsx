@@ -9,32 +9,44 @@ import DisclaimerModal from "../components/DisclaimerModal";
 
 const Index = () => {
   const [showSplash, setShowSplash] = useState(true);
+  const [hasVisited, setHasVisited] = useState(false);
+
+  useEffect(() => {
+    // Check if user has visited before
+    const visited = localStorage.getItem('juriSenseVisited');
+    if (visited === 'true') {
+      setHasVisited(true);
+      setShowSplash(false);
+    }
+  }, []);
 
   const handleSplashComplete = () => {
     setShowSplash(false);
+    setHasVisited(true);
+    localStorage.setItem('juriSenseVisited', 'true');
   };
 
   return (
     <>
-      <AnimatePresence>
-        {showSplash && (
+      <AnimatePresence mode="wait">
+        {showSplash && !hasVisited ? (
           <SplashScreen onComplete={handleSplashComplete} />
+        ) : (
+          <motion.div
+            key="main-content"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <HeroSection />
+            <FeatureTiles />
+            <DocumentUploadSample />
+            <ChatSample />
+            <DisclaimerModal />
+          </motion.div>
         )}
       </AnimatePresence>
-
-      {!showSplash && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6 }}
-        >
-          <HeroSection />
-          <FeatureTiles />
-          <DocumentUploadSample />
-          <ChatSample />
-          <DisclaimerModal />
-        </motion.div>
-      )}
     </>
   );
 };

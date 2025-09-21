@@ -4,7 +4,7 @@ export async function queryOllama(prompt: string): Promise<string> {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "llama2",   // change if you use another model
+        model: "llama3.2:latest",   // Updated to use the correct model name
         prompt: prompt,
         stream: true
       })

@@ -161,3 +161,10 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+curl http://localhost:11434/api/generate -d '{
+  "model": "juri",
+  "prompt": "Hello, how are you?"
+}'

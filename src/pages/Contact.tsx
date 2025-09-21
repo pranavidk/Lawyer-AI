@@ -99,7 +99,7 @@ const Contact = () => {
                 </label>
                 <input
                   type="text"
-                  className="w-full px-4 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-blue focus:border-transparent"
+                  className="w-full px-4 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-blue focus:border-transparent text-foreground placeholder:text-muted-foreground bg-background"
                   placeholder="Your full name"
                 />
               </div>
@@ -109,7 +109,7 @@ const Contact = () => {
                 </label>
                 <input
                   type="email"
-                  className="w-full px-4 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-blue focus:border-transparent"
+                  className="w-full px-4 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-blue focus:border-transparent text-foreground placeholder:text-muted-foreground bg-background"
                   placeholder="your.email@example.com"
                 />
               </div>
@@ -119,7 +119,7 @@ const Contact = () => {
                 </label>
                 <input
                   type="text"
-                  className="w-full px-4 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-blue focus:border-transparent"
+                  className="w-full px-4 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-blue focus:border-transparent text-foreground placeholder:text-muted-foreground bg-background"
                   placeholder="How can we help?"
                 />
               </div>
@@ -129,7 +129,7 @@ const Contact = () => {
                 </label>
                 <textarea
                   rows={5}
-                  className="w-full px-4 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-blue focus:border-transparent"
+                  className="w-full px-4 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-blue focus:border-transparent text-foreground placeholder:text-muted-foreground bg-background"
                   placeholder="Tell us more about your question or issue..."
                 />
               </div>

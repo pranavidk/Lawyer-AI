@@ -174,11 +174,11 @@ async def analyze(file: UploadFile = File(...)) -> Any:
 	# Summary
 	summary_prompt = (
 		"You are a legal document analyzer. Summarize the document clearly and concisely in plain English. "
-		"Include only information explicitly present in the text. "
+		"Include ONLY information explicitly present in the text. "
 		"Do not add outside knowledge, interpretations, or assumptions. "
-		"The summary must be brief (maximum 120 words). "
+		"Do not add extra sentences or information not found in the text. "
 		"If key details such as purpose, scope, parties, or obligations are missing, explicitly state 'Not mentioned in the text.' "
-		"Keep the explanation precise and factual.\n\nText:\n" + context_for_summary
+		"Use only the exact information available in the document. Do not hallucinate or add content.\n\nText:\n" + context_for_summary
 	)
 	summary = generate(summary_prompt)
 
@@ -211,8 +211,9 @@ async def analyze(file: UploadFile = File(...)) -> Any:
 			f"Explain this legal term using ONLY information explicitly present in the document text below. "
 			f"Do not add any outside knowledge, interpretations, or assumptions. "
 			f"Use only what is directly stated in the text. "
+			f"Do not add extra sentences or information not found in the text. "
 			f"If the term is not explained in the text, state 'Not defined in the document.' "
-			f"Keep the explanation brief (maximum 50 words) and factual.\n\n"
+			f"Use only the exact information available. Do not hallucinate or add content.\n\n"
 			f"Term: {term_name}\n\n"
 			f"Document text:\n{context_for_summary}\n\n"
 			f"Explanation based only on document text:"

@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { UploadCloud, FileText, X, AlertTriangle, CheckCircle, Info } from "lucide-react";
+import { UploadCloud, FileText, X, AlertTriangle, CheckCircle } from "lucide-react";
 import { ragAgent, DocumentAnalysis } from "../lib/rag_service";
 
 const DocumentUploadSample = () => {
@@ -25,9 +25,10 @@ const DocumentUploadSample = () => {
         { timeoutMs: 120000, topK: 6 }
       );
       setAnalysis(ragAnalysis);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Document analysis failed:', err);
-      setError('Failed to analyze document. Please make sure Ollama is running and try again.');
+      const msg = typeof err?.message === 'string' ? err.message : 'Failed to analyze document.';
+      setError(msg);
     } finally {
       setIsAnalyzing(false);
       setProgress(null);
@@ -143,15 +144,17 @@ const DocumentUploadSample = () => {
                     transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                   />
                   <div className="mt-4 text-muted-foreground">
-                    <p className="font-medium">
-                      {progress?.message || 'Analyzing document with RAG agent...'}
-                    </p>
-                    {typeof progress?.percent === 'number' && (
+                    <p className="font-medium">{progress?.message || 'Analyzing document with RAG agent...'}</p>
+                    {typeof progress?.percent === 'number' ? (
                       <div className="mt-2 w-full bg-gray-200 rounded h-2">
                         <div
                           className="bg-accent-blue h-2 rounded"
                           style={{ width: `${Math.max(0, Math.min(100, progress.percent))}%` }}
                         />
+                      </div>
+                    ) : (
+                      <div className="mt-2 w-full bg-gray-200 rounded h-2">
+                        <div className="bg-accent-blue h-2 rounded animate-pulse" style={{ width: '40%' }} />
                       </div>
                     )}
                   </div>
@@ -185,71 +188,36 @@ const DocumentUploadSample = () => {
                     <p className="text-blue-700 whitespace-pre-line">{analysis.summary}</p>
                   </div>
 
-                  {/* Key Terms Section */}
+                  {/* Key Legal Terms (sorted) */}
                   <div className="p-6 bg-green-50 rounded-lg border border-green-200">
-                    <div className="flex items-center mb-3">
-                      <Info className="h-5 w-5 text-green-600 mr-2" />
-                      <h4 className="font-semibold text-green-800">Key Legal Terms Explained</h4>
-                    </div>
+                    <h4 className="font-semibold text-green-800 mb-3">Key Legal Terms</h4>
                     <div className="space-y-3">
-                      {analysis.keyTerms.map((term, index) => (
+                      {analysis.terms.map((t, index) => (
                         <div key={index} className="bg-white p-3 rounded border">
-                          <div className="flex items-center justify-between mb-1">
-                            <span className="font-medium text-gray-800">{term.term}</span>
-                            <span className={`px-2 py-1 rounded text-xs font-medium ${
-                              term.importance === 'high' ? 'bg-red-100 text-red-800' :
-                              term.importance === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                              'bg-green-100 text-green-800'
-                            }`}>
-                              {term.importance} priority
-                            </span>
-                          </div>
-                          <p className="text-gray-600 text-sm">{term.definition}</p>
+                          <div className="font-medium text-gray-800 mb-1">{t.term}</div>
+                          <p className="text-gray-600 text-sm">{t.explanation}</p>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  {/* Important Clauses Section */}
+                  {/* Important Clauses (sorted) */}
                   <div className="p-6 bg-yellow-50 rounded-lg border border-yellow-200">
                     <div className="flex items-center mb-3">
                       <AlertTriangle className="h-5 w-5 text-yellow-600 mr-2" />
                       <h4 className="font-semibold text-yellow-800">Important Clauses</h4>
                     </div>
                     <div className="space-y-3">
-                      {analysis.clauses.map((clause, index) => (
+                      {analysis.clauses.map((c, index) => (
                         <div key={index} className="bg-white p-3 rounded border">
-                          <div className="flex items-center justify-between mb-1">
-                            <span className="font-medium text-gray-800">{clause.title}</span>
-                            <span className={`px-2 py-1 rounded text-xs font-medium ${
-                              clause.riskLevel === 'high' ? 'bg-red-100 text-red-800' :
-                              clause.riskLevel === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                              'bg-green-100 text-green-800'
-                            }`}>
-                              {clause.riskLevel} risk
-                            </span>
-                          </div>
-                          <p className="text-gray-600 text-sm">{clause.description}</p>
+                          <div className="font-medium text-gray-800 mb-1">{c.clause}</div>
+                          <p className="text-gray-600 text-sm">{c.explanation}</p>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  {/* Recommendations Section */}
-                  <div className="p-6 bg-purple-50 rounded-lg border border-purple-200">
-                    <div className="flex items-center mb-3">
-                      <Info className="h-5 w-5 text-purple-600 mr-2" />
-                      <h4 className="font-semibold text-purple-800">Recommendations</h4>
-                    </div>
-                    <ul className="space-y-2">
-                      {analysis.recommendations.map((recommendation, index) => (
-                        <li key={index} className="flex items-start">
-                          <span className="text-purple-600 mr-2 mt-1">•</span>
-                          <span className="text-purple-700">{recommendation}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                  {/* No Recommendations per requirements */}
                 </motion.div>
               ) : null}
             </div>

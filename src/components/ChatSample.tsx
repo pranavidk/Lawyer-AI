@@ -14,7 +14,15 @@ const ChatSample = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: crypto.randomUUID(),
-      content: "Hello! I'm your AI legal assistant. I can help explain legal concepts, analyze documents, and answer your questions in plain English. What would you like to know?",
+      content: `👋 Hello! I'm **JuriSense AI**, your personal legal assistant.
+
+I can help you with:
+- **Explaining complex legal terms** in plain English
+- **Analyzing documents & providing summaries**
+- **Predicting possible outcomes** of scenarios
+- **Offering guidance** on legal concepts you may not know
+
+What would you like me to assist you with today?`,
       isUser: false,
       timestamp: new Date(),
     },
@@ -145,7 +153,7 @@ User question: ${currentInput}`;
                     {message.isUser && (
                       <User className="h-4 w-4 mt-0.5 text-white flex-shrink-0" />
                     )}
-                    <p className="text-sm">{message.content}</p>
+                    <p className="text-sm whitespace-pre-line">{message.content}</p>
                   </div>
                 </div>
               </motion.div>

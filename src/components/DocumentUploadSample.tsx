@@ -1,21 +1,30 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { UploadCloud, FileText, X } from "lucide-react";
+import { UploadCloud, FileText, X, AlertTriangle, CheckCircle, Info } from "lucide-react";
+import { ragAgent, DocumentAnalysis } from "../lib/rag_service";
 
 const DocumentUploadSample = () => {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysis, setAnalysis] = useState("");
+  const [analysis, setAnalysis] = useState<DocumentAnalysis | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleFileUpload = (file: File) => {
+  const handleFileUpload = async (file: File) => {
     setUploadedFile(file);
     setIsAnalyzing(true);
+    setError(null);
+    setAnalysis(null);
     
-    // Simulate analysis
-    setTimeout(() => {
+    try {
+      // Use RAG agent to analyze the document
+      const ragAnalysis = await ragAgent.analyzeDocument(file);
+      setAnalysis(ragAnalysis);
+    } catch (err) {
+      console.error('Document analysis failed:', err);
+      setError('Failed to analyze document. Please make sure Ollama is running and try again.');
+    } finally {
       setIsAnalyzing(false);
-      setAnalysis(`Analysis of ${file.name}: This document appears to be a legal contract with standard terms and conditions. Key sections include liability clauses, termination procedures, and payment terms. The document follows conventional legal formatting and contains no unusual provisions.`);
-    }, 2000);
+    }
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -35,8 +44,9 @@ const DocumentUploadSample = () => {
 
   const removeFile = () => {
     setUploadedFile(null);
-    setAnalysis("");
+    setAnalysis(null);
     setIsAnalyzing(false);
+    setError(null);
   };
 
   return (
@@ -124,17 +134,102 @@ const DocumentUploadSample = () => {
                     animate={{ rotate: 360 }}
                     transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                   />
-                  <p className="mt-4 text-muted-foreground">Analyzing document...</p>
+                  <p className="mt-4 text-muted-foreground">Analyzing document with RAG agent...</p>
                 </div>
-              ) : analysis ? (
+              ) : error ? (
                 <motion.div
-                  className="p-6 bg-green-50 rounded-lg border border-green-200"
+                  className="p-6 bg-red-50 rounded-lg border border-red-200"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <h4 className="font-semibold text-green-800 mb-2">Analysis Complete</h4>
-                  <p className="text-green-700">{analysis}</p>
+                  <div className="flex items-center mb-2">
+                    <AlertTriangle className="h-5 w-5 text-red-600 mr-2" />
+                    <h4 className="font-semibold text-red-800">Analysis Failed</h4>
+                  </div>
+                  <p className="text-red-700">{error}</p>
+                </motion.div>
+              ) : analysis ? (
+                <motion.div
+                  className="space-y-6"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  {/* Summary Section */}
+                  <div className="p-6 bg-blue-50 rounded-lg border border-blue-200">
+                    <div className="flex items-center mb-3">
+                      <CheckCircle className="h-5 w-5 text-blue-600 mr-2" />
+                      <h4 className="font-semibold text-blue-800">Document Summary</h4>
+                    </div>
+                    <p className="text-blue-700 whitespace-pre-line">{analysis.summary}</p>
+                  </div>
+
+                  {/* Key Terms Section */}
+                  <div className="p-6 bg-green-50 rounded-lg border border-green-200">
+                    <div className="flex items-center mb-3">
+                      <Info className="h-5 w-5 text-green-600 mr-2" />
+                      <h4 className="font-semibold text-green-800">Key Legal Terms Explained</h4>
+                    </div>
+                    <div className="space-y-3">
+                      {analysis.keyTerms.map((term, index) => (
+                        <div key={index} className="bg-white p-3 rounded border">
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="font-medium text-gray-800">{term.term}</span>
+                            <span className={`px-2 py-1 rounded text-xs font-medium ${
+                              term.importance === 'high' ? 'bg-red-100 text-red-800' :
+                              term.importance === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                              'bg-green-100 text-green-800'
+                            }`}>
+                              {term.importance} priority
+                            </span>
+                          </div>
+                          <p className="text-gray-600 text-sm">{term.definition}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Important Clauses Section */}
+                  <div className="p-6 bg-yellow-50 rounded-lg border border-yellow-200">
+                    <div className="flex items-center mb-3">
+                      <AlertTriangle className="h-5 w-5 text-yellow-600 mr-2" />
+                      <h4 className="font-semibold text-yellow-800">Important Clauses</h4>
+                    </div>
+                    <div className="space-y-3">
+                      {analysis.clauses.map((clause, index) => (
+                        <div key={index} className="bg-white p-3 rounded border">
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="font-medium text-gray-800">{clause.title}</span>
+                            <span className={`px-2 py-1 rounded text-xs font-medium ${
+                              clause.riskLevel === 'high' ? 'bg-red-100 text-red-800' :
+                              clause.riskLevel === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                              'bg-green-100 text-green-800'
+                            }`}>
+                              {clause.riskLevel} risk
+                            </span>
+                          </div>
+                          <p className="text-gray-600 text-sm">{clause.description}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Recommendations Section */}
+                  <div className="p-6 bg-purple-50 rounded-lg border border-purple-200">
+                    <div className="flex items-center mb-3">
+                      <Info className="h-5 w-5 text-purple-600 mr-2" />
+                      <h4 className="font-semibold text-purple-800">Recommendations</h4>
+                    </div>
+                    <ul className="space-y-2">
+                      {analysis.recommendations.map((recommendation, index) => (
+                        <li key={index} className="flex items-start">
+                          <span className="text-purple-600 mr-2 mt-1">•</span>
+                          <span className="text-purple-700">{recommendation}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </motion.div>
               ) : null}
             </div>

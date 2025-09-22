@@ -1,12 +1,11 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { UploadCloud, FileText, X, AlertTriangle, CheckCircle } from "lucide-react";
-import { ragAgent, DocumentAnalysis } from "../lib/rag_service";
 
 const DocumentUploadSample = () => {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysis, setAnalysis] = useState<DocumentAnalysis | null>(null);
+  const [analysis, setAnalysis] = useState<{ summary: string; terms: { term: string; explanation: string }[] } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState<{ phase: string; message: string; percent?: number } | null>(null);
 
@@ -18,13 +17,21 @@ const DocumentUploadSample = () => {
     setProgress({ phase: 'reading', message: 'Initializing...', percent: 0 });
     
     try {
-      // Use RAG agent to analyze the document
-      const ragAnalysis = await ragAgent.analyzeDocument(
-        file,
-        (u) => setProgress({ phase: u.phase, message: u.message, percent: u.percent }),
-        { timeoutMs: 120000, topK: 6 }
-      );
-      setAnalysis(ragAnalysis);
+      // Send file to backend RAG server
+      const form = new FormData();
+      form.append('file', file);
+      setProgress({ phase: 'embedding', message: 'Uploading and embedding...', percent: 10 });
+      const resp = await fetch('http://127.0.0.1:8000/analyze', {
+        method: 'POST',
+        body: form
+      });
+      if (!resp.ok) {
+        const msg = await resp.text();
+        throw new Error(msg || `Server error ${resp.status}`);
+      }
+      const data = await resp.json();
+      setProgress({ phase: 'summarizing', message: 'Generating summary...', percent: 80 });
+      setAnalysis({ summary: data.summary, terms: data.terms || [] });
     } catch (err: any) {
       console.error('Document analysis failed:', err);
       const msg = typeof err?.message === 'string' ? err.message : 'Failed to analyze document.';
@@ -202,20 +209,7 @@ const DocumentUploadSample = () => {
                   </div>
 
                   {/* Important Clauses (sorted) */}
-                  <div className="p-6 bg-yellow-50 rounded-lg border border-yellow-200">
-                    <div className="flex items-center mb-3">
-                      <AlertTriangle className="h-5 w-5 text-yellow-600 mr-2" />
-                      <h4 className="font-semibold text-yellow-800">Important Clauses</h4>
-                    </div>
-                    <div className="space-y-3">
-                      {analysis.clauses.map((c, index) => (
-                        <div key={index} className="bg-white p-3 rounded border">
-                          <div className="font-medium text-gray-800 mb-1">{c.clause}</div>
-                          <p className="text-gray-600 text-sm">{c.explanation}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                  
 
                   {/* No Recommendations per requirements */}
                 </motion.div>

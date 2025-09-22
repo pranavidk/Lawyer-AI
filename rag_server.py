@@ -171,14 +171,12 @@ async def analyze(file: UploadFile = File(...)) -> Any:
 		retrieved_docs = [chunks[i] for i, _ in scored[:8]]
 		context_for_summary = "\n\n".join(retrieved_docs)
 
-	# Summary Reducer
+	# Summary Extraction - Concise, 120-word-or-less summary
 	summary_prompt = (
-		"You are a legal document analyzer. Summarize ONLY what is explicitly written in the following text. "
-		"Do not add outside knowledge, do not interpret, and do not assume. "
-		"Keep the summary concise, objective, and in plain English. "
-		"Maximum length: 120 words. "
-		"If key details such as purpose, scope, parties, or obligations are missing, write 'Not mentioned in the text.' "
-		"Do not merge or conflate unrelated sections — summarize exactly as stated. "
+		"You are a precise legal document analyzer. Produce a concise, 120-word-or-less summary of the text. "
+		"Capture purpose, scope, obligations, context, and key points ONLY if explicitly written in the text. "
+		"If an element (e.g., parties, obligations) is absent, simply omit it — do not mention 'not defined' or 'not available.' "
+		"Style: clear, professional, compact. No redundant disclaimers. "
 		"Return plain text only, not JSON.\n\nText:\n" + context_for_summary
 	)
 	summary = generate(summary_prompt)
@@ -188,21 +186,18 @@ async def analyze(file: UploadFile = File(...)) -> Any:
 	if len(summary_words) > 120:
 		summary = " ".join(summary_words[:120])
 
-	# Legal Term Extraction Reducer - Process all chunks with strict JSON schema
+	# Term Extraction - Identify all key legal terms with comprehensive explanations
 	all_terms: List[Dict[str, str]] = []
 	
-	# Process each chunk with the exact legal term extraction prompt
+	# Process each chunk for term extraction
 	for i, chunk in enumerate(chunks):
 		term_extraction_prompt = (
-			"You are a legal text processor. From the following text, extract EVERY explicitly mentioned **legal act, statute, law, regulation, article, case name, or defined legal concept/phrase**. "
-			"Rules: "
-			"- Always include the full official name of laws and acts (e.g., 'Hindu Marriage Act, 1955'). "
-			"- Always include case names, constitutional articles, and defined legal terms (e.g., 'Article 142 of the Indian Constitution', 'Shayara Bano case'). "
-			"- Ignore overly generic words like 'marriage', 'laws', 'communities', 'religions' unless they are clearly given a formal definition in the text. "
-			"- For each term, scan the entire text for its explicit definition, explanation, or context. "
-			"- If no definition or explanation is provided, output: 'Not defined in the document.' "
-			"- Do not infer, interpret, or add outside knowledge. "
-			"- Keep each explanation concise (max 2 sentences), factual, and based ONLY on the text. "
+			"You are a precise legal document analyzer. Identify all key legal terms, acts, doctrines, and phrases explicitly present in the text. "
+			"For each term: "
+			"- Scan the ENTIRE document for every mention or explanatory phrase. "
+			"- Concatenate all relevant definitions, attributes, or conditions into one comprehensive explanation. "
+			"- Keep language neutral, factual, and tied strictly to the provided text. "
+			"- Never return 'not defined.' If a term is listed but lacks explanation, simply list it without an explanation. "
 			"Return STRICT JSON ONLY in this format: "
 			'{"terms":[{"term":"...","explanation":"..."}]} '
 			"(no prose, no comments, no backticks, no trailing commas).\n\nText:\n" + chunk
@@ -219,7 +214,7 @@ async def analyze(file: UploadFile = File(...)) -> Any:
 			# Skip malformed JSON chunks
 			continue
 	
-	# Deduplicate terms by normalized term name
+	# Deduplicate and merge terms with comprehensive explanations
 	terms_map = {}
 	for term_data in all_terms:
 		if isinstance(term_data, dict) and "term" in term_data and "explanation" in term_data:
@@ -227,14 +222,16 @@ async def analyze(file: UploadFile = File(...)) -> Any:
 			if term_key not in terms_map:
 				terms_map[term_key] = term_data
 			else:
-				# Merge explanations if term appears multiple times
+				# Concatenate explanations from multiple mentions
 				existing = terms_map[term_key]["explanation"]
 				new_explanation = term_data["explanation"]
-				if existing != new_explanation and "Not defined in the document." not in [existing, new_explanation]:
-					# Combine explanations without adding new information
+				if existing and new_explanation and existing != new_explanation:
+					# Combine explanations comprehensively
 					terms_map[term_key]["explanation"] = f"{existing} {new_explanation}"
+				elif not existing and new_explanation:
+					terms_map[term_key]["explanation"] = new_explanation
 	
-	# Convert to list and limit to top 10 terms
-	terms = list(terms_map.values())[:10]
+	# Convert to list and limit to top 15 terms
+	terms = list(terms_map.values())[:15]
 
 	return AnalyzeResponse(summary=summary, terms=terms)

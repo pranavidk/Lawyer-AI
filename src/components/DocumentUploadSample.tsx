@@ -31,23 +31,18 @@ const DocumentUploadSample = () => {
       const form = new FormData();
       form.append('file', file);
       
-      // Simulate progress updates for different phases
-      setProgress({ phase: 'reading', message: 'Reading document...', percent: 5 });
+      // Sleek step-based progress updates
+      setProgress({ phase: 'reading', message: 'Parsing document text...', percent: 20 });
+      await new Promise(resolve => setTimeout(resolve, 600));
+      
+      setProgress({ phase: 'summarizing', message: 'Summarizing key points...', percent: 40 });
       await new Promise(resolve => setTimeout(resolve, 500));
       
-      setProgress({ phase: 'chunking', message: 'Processing document chunks...', percent: 15 });
-      await new Promise(resolve => setTimeout(resolve, 300));
-      
-      setProgress({ phase: 'embedding', message: 'Generating embeddings...', percent: 25 });
+      setProgress({ phase: 'extracting_terms', message: 'Extracting legal terms...', percent: 70 });
       await new Promise(resolve => setTimeout(resolve, 400));
       
-      setProgress({ phase: 'embedding', message: 'Storing in vector database...', percent: 50 });
+      setProgress({ phase: 'summarizing', message: 'Finalizing structured output...', percent: 90 });
       await new Promise(resolve => setTimeout(resolve, 300));
-      
-      setProgress({ phase: 'summarizing', message: 'Generating summary...', percent: 70 });
-      await new Promise(resolve => setTimeout(resolve, 200));
-      
-      setProgress({ phase: 'extracting_terms', message: 'Extracting legal terms...', percent: 85 });
       
       const resp = await fetch('http://127.0.0.1:8000/analyze', {
         method: 'POST',

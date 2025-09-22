@@ -121,21 +121,27 @@ Answer based on the document:"""
 # --- Main execution ---
 def main():
     print("🚀 Legal RAG Assistant (PDF Reader)")
-    
-    # Try to load the PDF document
-    pdf_path = "law-test.pdf"
+
+    # Accept PDF path as first argument, default to 'law-test.pdf' if not provided
+    if len(sys.argv) > 1 and sys.argv[1].lower().endswith('.pdf'):
+        pdf_path = sys.argv[1]
+        question_args = sys.argv[2:]
+    else:
+        pdf_path = "law-test.pdf"
+        question_args = sys.argv[1:]
+
     if not load_data(pdf_path):
-        print("❌ No PDF found. Please ensure 'law-test.pdf' exists in the current directory.")
+        print(f"❌ No PDF found. Please ensure '{pdf_path}' exists in the current directory.")
         return
-    
-    # Check if a question was provided as command line argument
-    if len(sys.argv) > 1:
-        question = " ".join(sys.argv[1:])
+
+    # If a question is provided as command line argument (after PDF path), answer it and exit
+    if question_args:
+        question = " ".join(question_args)
         print(f"Question: {question}")
         answer = rag_query(question)
         print(f"Answer: {answer}")
         return
-    
+
     # Interactive loop
     print("\n📖 Legal RAG Assistant Ready! (type 'exit' to quit)\n")
     while True:
@@ -144,7 +150,7 @@ def main():
             if question.lower() in ["exit", "quit", "q"]:
                 print("👋 Goodbye!")
                 break
-            
+
             if question.strip():
                 answer = rag_query(question)
                 print(f"🤖 {answer}\n")

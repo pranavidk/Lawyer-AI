@@ -173,9 +173,12 @@ async def analyze(file: UploadFile = File(...)) -> Any:
 
 	# Summary
 	summary_prompt = (
-		"You are a legal document analyzer. Summarize the document in 5–7 sentences, "
-		"focusing on purpose, scope, parties, obligations, and overall meaning. "
-		"Keep it concise and plain English.\n\nText:\n" + context_for_summary
+		"You are a legal document analyzer. Summarize the document clearly and concisely in plain English. "
+		"Include only information explicitly present in the text. "
+		"Do not add outside knowledge, interpretations, or assumptions. "
+		"The summary must be brief (maximum 120 words). "
+		"If key details such as purpose, scope, parties, or obligations are missing, explicitly state 'Not mentioned in the text.' "
+		"Keep the explanation precise and factual.\n\nText:\n" + context_for_summary
 	)
 	summary = generate(summary_prompt)
 
@@ -201,15 +204,18 @@ async def analyze(file: UploadFile = File(...)) -> Any:
 			if term and len(term) > 2:
 				term_names.append(term)
 	
-	# Get explanations for each term using the full document context
+	# Get explanations for each term using ONLY the document text
 	terms: List[Dict[str, str]] = []
 	for term_name in term_names[:10]:  # Limit to top 10 terms to avoid overwhelming
 		explain_prompt = (
-			f"Explain this legal term in 2-3 sentences using plain English. "
-			f"Base your explanation on the document context provided.\n\n"
+			f"Explain this legal term using ONLY information explicitly present in the document text below. "
+			f"Do not add any outside knowledge, interpretations, or assumptions. "
+			f"Use only what is directly stated in the text. "
+			f"If the term is not explained in the text, state 'Not defined in the document.' "
+			f"Keep the explanation brief (maximum 50 words) and factual.\n\n"
 			f"Term: {term_name}\n\n"
-			f"Document context:\n{context_for_summary}\n\n"
-			f"Explanation:"
+			f"Document text:\n{context_for_summary}\n\n"
+			f"Explanation based only on document text:"
 		)
 		explanation = generate(explain_prompt).strip()
 		if explanation and len(explanation) > 10:  # Only add if we got a meaningful explanation

@@ -2,27 +2,46 @@ import ollama
 import os
 import json
 import sys
-from pypdf import PdfReader
 import re
+try:
+    from pypdf import PdfReader
+except ImportError:
+    PdfReader = None
 
 # Simple in-memory storage instead of ChromaDB
 pdf_data = []
 
-# --- Step 1: Load PDF ---
-def load_pdf_text(path):
+
+# --- Step 1: Load PDF or TXT ---
+def load_file_text(path):
     if not os.path.exists(path):
-        print(f"PDF file not found: {path}")
+        print(f"File not found: {path}")
         return ""
-    
-    try:
-        reader = PdfReader(path)
-        text = ""
-        for page in reader.pages:
-            if page.extract_text():
-                text += page.extract_text() + "\n"
-        return text
-    except Exception as e:
-        print(f"Could not read PDF: {e}")
+
+    ext = os.path.splitext(path)[1].lower()
+    if ext == ".pdf":
+        if PdfReader is None:
+            print("pypdf not installed. Cannot read PDF files.")
+            return ""
+        try:
+            reader = PdfReader(path)
+            text = ""
+            for page in reader.pages:
+                if page.extract_text():
+                    text += page.extract_text() + "\n"
+            return text
+        except Exception as e:
+            print(f"Could not read PDF: {e}")
+            return ""
+    elif ext == ".txt":
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                return f.read()
+        except Exception as e:
+            print(f"Could not read TXT: {e}")
+            return ""
+    else:
+        print(f"Unsupported file type: {ext}")
         return ""
 
 # --- Step 2: Split into chunks ---
@@ -70,22 +89,22 @@ def search_chunks(query, chunks, top_k=3):
     return [chunk for score, i, chunk in scored_chunks[:top_k]]
 
 # --- Step 4: Load and index data ---
-def load_data(pdf_path):
+def load_data(file_path):
     global pdf_data
-    
+
     # Check if we already have data
     if pdf_data:
         print("✅ Using existing data.")
         return True
-    
-    print("Loading PDF document...")
-    text = load_pdf_text(pdf_path)
+
+    print(f"Loading document: {file_path}")
+    text = load_file_text(file_path)
     if not text:
         return False
-    
+
     chunks = chunk_text(text)
     pdf_data = chunks
-    print(f"✅ Loaded {len(chunks)} chunks from PDF document.")
+    print(f"✅ Loaded {len(chunks)} chunks from document.")
     return True
 
 # --- Step 5: Query function ---
@@ -122,19 +141,19 @@ Answer based on the document:"""
 def main():
     print("🚀 Legal RAG Assistant (PDF Reader)")
 
-    # Accept PDF path as first argument, default to 'law-test.pdf' if not provided
-    if len(sys.argv) > 1 and sys.argv[1].lower().endswith('.pdf'):
-        pdf_path = sys.argv[1]
+    # Accept file path as first argument, default to 'law-test.pdf' if not provided
+    if len(sys.argv) > 1 and sys.argv[1].lower().endswith(('.pdf', '.txt')):
+        file_path = sys.argv[1]
         question_args = sys.argv[2:]
     else:
-        pdf_path = "law-test.pdf"
+        file_path = "law-test.pdf"
         question_args = sys.argv[1:]
 
-    if not load_data(pdf_path):
-        print(f"❌ No PDF found. Please ensure '{pdf_path}' exists in the current directory.")
+    if not load_data(file_path):
+        print(f"❌ No file found or unsupported type. Please ensure '{file_path}' exists and is a PDF or TXT file.")
         return
 
-    # If a question is provided as command line argument (after PDF path), answer it and exit
+    # If a question is provided as command line argument (after file path), answer it and exit
     if question_args:
         question = " ".join(question_args)
         print(f"Question: {question}")

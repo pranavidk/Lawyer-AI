@@ -27,10 +27,28 @@ const DocumentUploadSample = () => {
         throw new Error('Cannot reach RAG server at http://127.0.0.1:8000. Please start: uvicorn rag_server:app --host 127.0.0.1 --port 8000');
       }
 
-      // Send file to backend RAG server
+      // Send file to backend RAG server with progress tracking
       const form = new FormData();
       form.append('file', file);
-      setProgress({ phase: 'embedding', message: 'Uploading and embedding...', percent: 10 });
+      
+      // Simulate progress updates for different phases
+      setProgress({ phase: 'reading', message: 'Reading document...', percent: 5 });
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      setProgress({ phase: 'chunking', message: 'Processing document chunks...', percent: 15 });
+      await new Promise(resolve => setTimeout(resolve, 300));
+      
+      setProgress({ phase: 'embedding', message: 'Generating embeddings...', percent: 25 });
+      await new Promise(resolve => setTimeout(resolve, 400));
+      
+      setProgress({ phase: 'embedding', message: 'Storing in vector database...', percent: 50 });
+      await new Promise(resolve => setTimeout(resolve, 300));
+      
+      setProgress({ phase: 'summarizing', message: 'Generating summary...', percent: 70 });
+      await new Promise(resolve => setTimeout(resolve, 200));
+      
+      setProgress({ phase: 'extracting_terms', message: 'Extracting legal terms...', percent: 85 });
+      
       const resp = await fetch('http://127.0.0.1:8000/analyze', {
         method: 'POST',
         body: form
@@ -40,7 +58,7 @@ const DocumentUploadSample = () => {
         throw new Error(msg || `Server error ${resp.status}`);
       }
       const data = await resp.json();
-      setProgress({ phase: 'summarizing', message: 'Generating summary...', percent: 80 });
+      setProgress({ phase: 'summarizing', message: 'Analysis complete!', percent: 100 });
       setAnalysis({ summary: data.summary, terms: data.terms || [] });
     } catch (err: any) {
       console.error('Document analysis failed:', err);

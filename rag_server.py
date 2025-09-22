@@ -188,44 +188,53 @@ async def analyze(file: UploadFile = File(...)) -> Any:
 	if len(summary_words) > 120:
 		summary = " ".join(summary_words[:120])
 
-	# Extract key legal terms from the summary using LLM
-	extract_terms_prompt = (
-		"You are a legal expert. From the following summary, extract ONLY the key legal terms and phrases mentioned. "
-		"Return a simple list, one term per line, without explanations. Be concise and accurate.\n\n"
-		"SUMMARY:\n" + summary + "\n\n"
-		"List of key legal terms:"
-	)
-	terms_list_text = generate(extract_terms_prompt)
+	# Legal Term Extraction Reducer - Process all chunks with strict JSON schema
+	all_terms: List[Dict[str, str]] = []
 	
-	# Parse the terms list
-	term_names = []
-	for line in terms_list_text.splitlines():
-		line = line.strip()
-		if line and not line.startswith("#") and not line.startswith("-"):
-			# Clean up the term (remove numbering, bullets, etc.)
-			term = line.replace("•", "").replace("*", "").replace("-", "").strip()
-			# Remove leading numbers like "1. " or "1) "
-			import re
-			term = re.sub(r'^\d+[\.\)]\s*', '', term)
-			if term and len(term) > 2:
-				term_names.append(term)
-	
-	# Get explanations for each term using ONLY the document text
-	terms: List[Dict[str, str]] = []
-	for term_name in term_names[:10]:  # Limit to top 10 terms to avoid overwhelming
-		explain_prompt = (
-			f"Explain this legal term using ONLY information explicitly present in the document text below. "
-			f"Do not add any outside knowledge, interpretations, or assumptions. "
-			f"Use only what is directly stated in the text. "
-			f"Do not add extra sentences or information not found in the text. "
-			f"If the term is not explained in the text, state 'Not defined in the document.' "
-			f"Use only the exact information available. Do not hallucinate or add content.\n\n"
-			f"Term: {term_name}\n\n"
-			f"Document text:\n{context_for_summary}\n\n"
-			f"Explanation based only on document text:"
+	# Process each chunk with the exact legal term extraction prompt
+	for i, chunk in enumerate(chunks):
+		term_extraction_prompt = (
+			"You are a legal text processor. From the following text, extract EVERY explicitly mentioned **legal act, statute, law, regulation, article, case name, or defined legal concept/phrase**. "
+			"Rules: "
+			"- Always include the full official name of laws and acts (e.g., 'Hindu Marriage Act, 1955'). "
+			"- Always include case names, constitutional articles, and defined legal terms (e.g., 'Article 142 of the Indian Constitution', 'Shayara Bano case'). "
+			"- Ignore overly generic words like 'marriage', 'laws', 'communities', 'religions' unless they are clearly given a formal definition in the text. "
+			"- For each term, scan the entire text for its explicit definition, explanation, or context. "
+			"- If no definition or explanation is provided, output: 'Not defined in the document.' "
+			"- Do not infer, interpret, or add outside knowledge. "
+			"- Keep each explanation concise (max 2 sentences), factual, and based ONLY on the text. "
+			"Return STRICT JSON ONLY in this format: "
+			'{"terms":[{"term":"...","explanation":"..."}]} '
+			"(no prose, no comments, no backticks, no trailing commas).\n\nText:\n" + chunk
 		)
-		explanation = generate(explain_prompt).strip()
-		if explanation and len(explanation) > 10:  # Only add if we got a meaningful explanation
-			terms.append({"term": term_name, "explanation": explanation})
+		
+		try:
+			terms_json = generate(term_extraction_prompt)
+			# Parse JSON with strict validation
+			import json
+			parsed = json.loads(terms_json.strip())
+			if isinstance(parsed, dict) and "terms" in parsed and isinstance(parsed["terms"], list):
+				all_terms.extend(parsed["terms"])
+		except (json.JSONDecodeError, KeyError, TypeError):
+			# Skip malformed JSON chunks
+			continue
+	
+	# Deduplicate terms by normalized term name
+	terms_map = {}
+	for term_data in all_terms:
+		if isinstance(term_data, dict) and "term" in term_data and "explanation" in term_data:
+			term_key = term_data["term"].lower().strip()
+			if term_key not in terms_map:
+				terms_map[term_key] = term_data
+			else:
+				# Merge explanations if term appears multiple times
+				existing = terms_map[term_key]["explanation"]
+				new_explanation = term_data["explanation"]
+				if existing != new_explanation and "Not defined in the document." not in [existing, new_explanation]:
+					# Combine explanations without adding new information
+					terms_map[term_key]["explanation"] = f"{existing} {new_explanation}"
+	
+	# Convert to list and limit to top 10 terms
+	terms = list(terms_map.values())[:10]
 
 	return AnalyzeResponse(summary=summary, terms=terms)

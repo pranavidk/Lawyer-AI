@@ -8,22 +8,29 @@ const DocumentUploadSample = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysis, setAnalysis] = useState<DocumentAnalysis | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [progress, setProgress] = useState<{ phase: string; message: string; percent?: number } | null>(null);
 
   const handleFileUpload = async (file: File) => {
     setUploadedFile(file);
     setIsAnalyzing(true);
     setError(null);
     setAnalysis(null);
+    setProgress({ phase: 'reading', message: 'Initializing...', percent: 0 });
     
     try {
       // Use RAG agent to analyze the document
-      const ragAnalysis = await ragAgent.analyzeDocument(file);
+      const ragAnalysis = await ragAgent.analyzeDocument(
+        file,
+        (u) => setProgress({ phase: u.phase, message: u.message, percent: u.percent }),
+        { timeoutMs: 120000, topK: 6 }
+      );
       setAnalysis(ragAnalysis);
     } catch (err) {
       console.error('Document analysis failed:', err);
       setError('Failed to analyze document. Please make sure Ollama is running and try again.');
     } finally {
       setIsAnalyzing(false);
+      setProgress(null);
     }
   };
 
@@ -47,6 +54,7 @@ const DocumentUploadSample = () => {
     setAnalysis(null);
     setIsAnalyzing(false);
     setError(null);
+    setProgress(null);
   };
 
   return (
@@ -134,7 +142,19 @@ const DocumentUploadSample = () => {
                     animate={{ rotate: 360 }}
                     transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                   />
-                  <p className="mt-4 text-muted-foreground">Analyzing document with RAG agent...</p>
+                  <div className="mt-4 text-muted-foreground">
+                    <p className="font-medium">
+                      {progress?.message || 'Analyzing document with RAG agent...'}
+                    </p>
+                    {typeof progress?.percent === 'number' && (
+                      <div className="mt-2 w-full bg-gray-200 rounded h-2">
+                        <div
+                          className="bg-accent-blue h-2 rounded"
+                          style={{ width: `${Math.max(0, Math.min(100, progress.percent))}%` }}
+                        />
+                      </div>
+                    )}
+                  </div>
                 </div>
               ) : error ? (
                 <motion.div

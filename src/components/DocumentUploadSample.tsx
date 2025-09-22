@@ -17,6 +17,16 @@ const DocumentUploadSample = () => {
     setProgress({ phase: 'reading', message: 'Initializing...', percent: 0 });
     
     try {
+      // Quick health check to avoid generic Failed to fetch
+      try {
+        const health = await fetch('http://127.0.0.1:8000/health', { method: 'GET' });
+        if (!health.ok) {
+          throw new Error('RAG server not reachable. Please start backend.');
+        }
+      } catch (e) {
+        throw new Error('Cannot reach RAG server at http://127.0.0.1:8000. Please start: uvicorn rag_server:app --host 127.0.0.1 --port 8000');
+      }
+
       // Send file to backend RAG server
       const form = new FormData();
       form.append('file', file);

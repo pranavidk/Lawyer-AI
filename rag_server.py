@@ -112,6 +112,11 @@ app.add_middleware(
 )
 
 
+@app.get("/health")
+async def health() -> Any:
+	return {"status": "ok", "model": GEN_MODEL, "embed": EMB_MODEL}
+
+
 @app.post("/analyze", response_model=AnalyzeResponse)
 async def analyze(file: UploadFile = File(...)) -> Any:
 	name = (file.filename or "uploaded").lower()

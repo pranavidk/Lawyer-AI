@@ -4,13 +4,13 @@ A modern, responsive React frontend for an AI-powered legal assistant platform d
 
 ## Features
 
-- **📄 Document Analysis**: Upload and analyze legal documents with AI-powered insights
-- **🤖 JuriSense AI Chat**: Interactive legal assistant for real-time legal guidance
-- **📚 Legal Knowledge Base**: Comprehensive database of Indian legal concepts and precedents
-- **🎨 Modern UI/UX**: Professional design with dark/light theme support
-- **📱 Responsive Design**: Optimized for desktop, tablet, and mobile devices
-- **⚡ Performance**: Fast loading with Vite and optimized React components
-- **🔒 Security**: Built with security best practices for legal data handling
+- ** Document Analysis**: Upload and analyze legal documents with AI-powered insights
+- ** JuriSense AI Chat**: Interactive legal assistant for real-time legal guidance
+- ** Legal Knowledge Base**: Comprehensive database of Indian legal concepts and precedents
+- ** Modern UI/UX**: Professional design with dark/light theme support
+- ** Responsive Design**: Optimized for desktop, tablet, and mobile devices
+- ** Performance**: Fast loading with Vite and optimized React components
+- ** Security**: Built with security best practices for legal data handling
 
 ## Tech Stack
 

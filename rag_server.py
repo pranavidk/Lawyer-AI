@@ -171,16 +171,22 @@ async def analyze(file: UploadFile = File(...)) -> Any:
 		retrieved_docs = [chunks[i] for i, _ in scored[:8]]
 		context_for_summary = "\n\n".join(retrieved_docs)
 
-	# Summary
+	# Summary Reducer
 	summary_prompt = (
-		"You are a legal document analyzer. Summarize the document clearly and concisely in plain English. "
-		"Include ONLY information explicitly present in the text. "
-		"Do not add outside knowledge, interpretations, or assumptions. "
-		"Do not add extra sentences or information not found in the text. "
-		"If key details such as purpose, scope, parties, or obligations are missing, explicitly state 'Not mentioned in the text.' "
-		"Use only the exact information available in the document. Do not hallucinate or add content.\n\nText:\n" + context_for_summary
+		"You are a legal document analyzer. Summarize ONLY what is explicitly written in the following text. "
+		"Do not add outside knowledge, do not interpret, and do not assume. "
+		"Keep the summary concise, objective, and in plain English. "
+		"Maximum length: 120 words. "
+		"If key details such as purpose, scope, parties, or obligations are missing, write 'Not mentioned in the text.' "
+		"Do not merge or conflate unrelated sections — summarize exactly as stated. "
+		"Return plain text only, not JSON.\n\nText:\n" + context_for_summary
 	)
 	summary = generate(summary_prompt)
+	
+	# Enforce 120 word limit on summary
+	summary_words = summary.split()
+	if len(summary_words) > 120:
+		summary = " ".join(summary_words[:120])
 
 	# Extract key legal terms from the summary using LLM
 	extract_terms_prompt = (

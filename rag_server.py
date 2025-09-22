@@ -179,47 +179,40 @@ async def analyze(file: UploadFile = File(...)) -> Any:
 	)
 	summary = generate(summary_prompt)
 
-	# Important terms limited to those relevant to the summary
-	terms_prompt = (
-		"You are a legal expert. Based on the following SUMMARY and related TEXT, "
-		"extract ONLY the IMPORTANT legal terms and phrases present in the document. "
-		"For each, provide a 2–3 sentence plain-English explanation. Do not include recommendations.\n\n"
-		"SUMMARY:\n" + summary + "\n\nTEXT:\n" + context_for_summary + "\n\n"
-		"Return STRICT plain text in the following format (repeat for each term):\n"
-		"Term: <term>\nExplanation: <explanation>\n"
+	# Extract key legal terms from the summary using LLM
+	extract_terms_prompt = (
+		"You are a legal expert. From the following summary, extract ONLY the key legal terms and phrases mentioned. "
+		"Return a simple list, one term per line, without explanations. Be concise and accurate.\n\n"
+		"SUMMARY:\n" + summary + "\n\n"
+		"List of key legal terms:"
 	)
-	terms_text = generate(terms_prompt)
-
-	# Parse plain-text terms list (no JSON)
-	terms: List[Dict[str, str]] = []
-	term = None
-	explanation = None
-	for line in terms_text.splitlines():
+	terms_list_text = generate(extract_terms_prompt)
+	
+	# Parse the terms list
+	term_names = []
+	for line in terms_list_text.splitlines():
 		line = line.strip()
-		if not line:
-			continue
-		if line.lower().startswith("term:"):
-			if term and explanation:
-				terms.append({"term": term, "explanation": explanation})
-			term = line.split(":", 1)[1].strip()
-			explanation = None
-		elif line.lower().startswith("explanation:"):
-			explanation = line.split(":", 1)[1].strip()
-		else:
-			# continuation of explanation
-			if explanation is not None:
-				explanation += " " + line
-	if term and explanation:
-		terms.append({"term": term, "explanation": explanation})
+		if line and not line.startswith("#") and not line.startswith("-"):
+			# Clean up the term (remove numbering, bullets, etc.)
+			term = line.replace("•", "").replace("*", "").replace("-", "").strip()
+			# Remove leading numbers like "1. " or "1) "
+			import re
+			term = re.sub(r'^\d+[\.\)]\s*', '', term)
+			if term and len(term) > 2:
+				term_names.append(term)
+	
+	# Get explanations for each term using the full document context
+	terms: List[Dict[str, str]] = []
+	for term_name in term_names[:10]:  # Limit to top 10 terms to avoid overwhelming
+		explain_prompt = (
+			f"Explain this legal term in 2-3 sentences using plain English. "
+			f"Base your explanation on the document context provided.\n\n"
+			f"Term: {term_name}\n\n"
+			f"Document context:\n{context_for_summary}\n\n"
+			f"Explanation:"
+		)
+		explanation = generate(explain_prompt).strip()
+		if explanation and len(explanation) > 10:  # Only add if we got a meaningful explanation
+			terms.append({"term": term_name, "explanation": explanation})
 
-	# Deduplicate terms by normalized name
-	seen = set()
-	unique_terms: List[Dict[str, str]] = []
-	for t in terms:
-		key = " ".join(t["term"].lower().split())
-		if key in seen:
-			continue
-		seen.add(key)
-		unique_terms.append(t)
-
-	return AnalyzeResponse(summary=summary, terms=unique_terms)
+	return AnalyzeResponse(summary=summary, terms=terms)
